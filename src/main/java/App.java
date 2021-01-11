@@ -1,3 +1,5 @@
+import GUI.MainWindow;
+import com.sun.tools.javac.Main;
 import javafx.application.Application;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
@@ -22,7 +24,11 @@ public class App extends Application {
     public void start(Stage stage) throws Exception {
         stage.setTitle("adel shakal");
 
-        Group layout = new Group();
+        Scene s = new Scene(new MainWindow(), 400, 400);
+        stage.setScene(s);
+        stage.show();
+
+        /*Group layout = new Group();
         for (int i = 0; i < 5; i++) {
             Rectangle r = new Rectangle();
             r.setY(i * 110);
@@ -34,8 +40,8 @@ public class App extends Application {
             r.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    r.setX(mouseEvent.getX() - );
-                    r.setY(mouseEvent.getY() - );
+                    r.setX(mouseEvent.getX() - r.getHeight() / 2);
+                    r.setY(mouseEvent.getY() - r.getWidth() / 2);
                 }
             });
             layout.getChildren().add(r);
@@ -44,5 +50,5 @@ public class App extends Application {
         stage.setScene(scene);
         stage.show();
 
-        stage.show();
+        stage.show();*/
     }}
