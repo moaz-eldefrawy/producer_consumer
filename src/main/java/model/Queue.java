@@ -21,7 +21,7 @@ public class Queue {
 
     /**
      * adds product to this queue*/
-    public void enqueue(Product product){
+    public synchronized void enqueue(Product product){
         boolean done = false;
         while (!waitingList.isEmpty()){
             Machine m = waitingList.poll();
@@ -49,18 +49,14 @@ public class Queue {
 
     /**
      * if no products in the queue, register machine as ready
-     * else obtain the lock on m and give it a product if it's ready*/
-    public void registerMachine(Machine m){
+     * else obtain the lock on m and give it a product if it's ready
+     * @return true if added to waiting list, false if queue already has a product*/
+    public boolean registerMachine(Machine m){
         if(internal.isEmpty()){
             waitingList.offer(m);
-        }else{
-            synchronized (m){
-                if(m.isReady()){
-                    m.putProduct(internal.poll());
-                    m.notify();
-                }
-            }
+            return true;
         }
+        return false;
     }
 
     public int size(){

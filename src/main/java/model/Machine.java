@@ -56,7 +56,10 @@ public class Machine implements Runnable{
      * registers this machine to all the input queues it is connected to*/
     public synchronized void register(){
         for(Queue q : in){
-            q.registerMachine(this);
+            if(!q.registerMachine(this)){ //if this queue got a product in the meantime
+                putProduct(q.dequeue()); //accept it
+                break;
+            }
         }
         while(currentProduct == null){
             try {
