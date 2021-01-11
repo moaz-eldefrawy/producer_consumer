@@ -34,8 +34,8 @@ public class App extends Application {
             r.setOnMouseDragged(new EventHandler<MouseEvent>() {
                 @Override
                 public void handle(MouseEvent mouseEvent) {
-                    r.setX(mouseEvent.getX() - );
-                    r.setY(mouseEvent.getY() - );
+                    //r.setX(mouseEvent.getX() - ); compilation error.. sorry
+                    //r.setY(mouseEvent.getY() - );
                 }
             });
             layout.getChildren().add(r);

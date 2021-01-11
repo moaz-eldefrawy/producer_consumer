@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 class MachineTest {
-    /*@Test
+    @Test
     public void testUnbelievablyHappyCase(){ //1 machine, 2 queues, one product
         Queue q_in = new Queue();
         Queue q_out = new Queue();
@@ -106,6 +106,40 @@ class MachineTest {
         assertTrue(q_in[0].isEmpty());
         assertTrue(q_in[1].isEmpty());
         assertEquals(7, q_out.size());
-    }*/
-    
+    }
+
+    @Test
+    public void testUnbelievablySadCase(){ //2 machines, 3 queues, many products
+        Queue[] q_in = new Queue[]{new Queue(), new Queue()};
+        Queue q_out = new Queue();
+        Machine m1 = new Machine(q_in, q_out, 1000, "light red");
+        Machine m2 = new Machine(q_in, q_out, 1500, "deep red");
+
+        Thread t1 = new Thread(m1, "Machine 1");
+        Thread t2 = new Thread(m2, "Machine 2");
+
+        q_in[0].enqueue(new Product("blue"));
+        q_in[0].enqueue(new Product("purple"));
+        q_in[1].enqueue(new Product("grey"));
+        q_in[1].enqueue(new Product("orange"));
+        q_in[1].enqueue(new Product("turquoise"));
+
+        assertTrue(m1.isReady());
+        assertTrue(m2.isReady());
+
+        t1.start();
+        t2.start();
+
+        try {
+            Thread.sleep(5000);
+            q_in[0].enqueue(new Product("gold"));
+            q_in[1].enqueue(new Product("white"));
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        assertTrue(q_in[0].isEmpty());
+        assertTrue(q_in[1].isEmpty());
+        assertEquals(7, q_out.size());
+    }
 }

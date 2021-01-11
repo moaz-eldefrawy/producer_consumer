@@ -1,10 +1,10 @@
 package model;
 
 public class Machine implements Runnable{
-    private Queue[] in;
-    private Queue out;
-    private String colour;
-    private long time;
+    private final Queue[] in;
+    private final Queue out;
+    private final String colour;
+    private final long time;
     private Product currentProduct;
     private volatile boolean stop = false;
 
@@ -15,7 +15,9 @@ public class Machine implements Runnable{
         this.colour = colour;
     }
 
+    /**processes current product and forwards it to next queue*/
     private void processProduct(){
+        report();
         try{
             Thread.sleep(time);
         }catch (InterruptedException e){
@@ -23,12 +25,25 @@ public class Machine implements Runnable{
         }
         out.enqueue(currentProduct);
         currentProduct = null;
+        report();
     }
 
+    /**reports to main/ mediator any colour change
+     * currently only a stub*/
+    private void report(){//still needs proper synchronization, check with main/monitor
+        System.out.print(Thread.currentThread().getName());
+        System.out.print("'s colour is ");
+        System.out.println(this.getColour());
+    }
+
+    /**
+     * @return true if ready to process (no product currently being processed*/
     public boolean isReady(){
         return currentProduct == null;
     }
 
+    /**sets the current product to be processed
+     * @return true if ready to process and received product, false otherwise*/
     public synchronized boolean putProduct(Product product){
         if(isReady()){
             currentProduct = product;
@@ -37,6 +52,8 @@ public class Machine implements Runnable{
         return false;
     }
 
+    /**
+     * registers this machine to all the input queues it is connected to*/
     public synchronized void register(){
         for(Queue q : in){
             q.registerMachine(this);
@@ -45,14 +62,21 @@ public class Machine implements Runnable{
             try {
                 this.wait();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                if(!stop) //the interrupt was not caused by stop method
+                    e.printStackTrace();
+                else
+                    return;
             }
         }
         processProduct();
     }
 
-    public void stop(){
+    /**
+     * safe way to stop the machine:
+     * stops only if no product is currently being processed AND not waiting for any queue*/
+    public synchronized void stop(){
         this.stop = true;
+        Thread.currentThread().interrupt();
     }
 
     public void run(){

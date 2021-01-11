@@ -19,6 +19,8 @@ public class Queue {
         waitingList = new ArrayBlockingQueue<>(m);
     }
 
+    /**
+     * adds product to this queue*/
     public void enqueue(Product product){
         boolean done = false;
         while (!waitingList.isEmpty()){
@@ -27,6 +29,7 @@ public class Queue {
                 if(m.putProduct(product)){
                     m.notify();
                     done = true;
+                    break;
                 }
             }
         }
@@ -35,6 +38,7 @@ public class Queue {
         }
     }
 
+    /**pulls product from queue*/
     public Product dequeue(){
         return internal.poll();
     }
@@ -43,8 +47,20 @@ public class Queue {
         return internal.isEmpty();
     }
 
+    /**
+     * if no products in the queue, register machine as ready
+     * else obtain the lock on m and give it a product if it's ready*/
     public void registerMachine(Machine m){
-        waitingList.offer(m);
+        if(internal.isEmpty()){
+            waitingList.offer(m);
+        }else{
+            synchronized (m){
+                if(m.isReady()){
+                    m.putProduct(internal.poll());
+                    m.notify();
+                }
+            }
+        }
     }
 
     public int size(){
