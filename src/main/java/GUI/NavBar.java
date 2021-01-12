@@ -4,26 +4,51 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseDragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.*;
+import javafx.scene.shape.Shape;
+
+import java.beans.EventHandler;
+import java.util.Date;
 
 public class NavBar extends HBox {
     double iconsSize = 50;
-
+    public SimulationCanvas simulationCanvas;
+    DraggableShape curr;
 
     public NavBar(){
         super();
 
         /*  Machine Button */
         CustomButton addMachineBtn = new CustomButton("machine.png");
-        addMachineBtn.setOnMouseClicked(e -> System.out.println("Machine Clicked"));
+        /*addMachineBtn.setOnMouseDragged(e -> {
+            simulationCanvas.onShapeDragged(e, curr);
+        });*/
+        addMachineBtn.setOnMousePressed(e -> {
+            MachineGUI m = new MachineGUI(e.getSceneX(), e.getSceneY());
+            simulationCanvas.addDraggableShapeToCanvas(m);
+            curr = m;
+        });
+
+
+
 
         /*  Queue Button */
         CustomButton addQueueBtn = new CustomButton("queue.png");
-        addQueueBtn.setOnMouseClicked(e -> System.out.println("Queue Clicked"));
+        /*addQueueBtn.setOnMouseDragged(e -> {
+            simulationCanvas.onShapeDragged(e, curr);
+        });*/
+        addQueueBtn.setOnMousePressed(e -> {
+            QueueGUI m = new QueueGUI(e.getSceneX(), e.getSceneY());
+            simulationCanvas.addDraggableShapeToCanvas(m);
+            curr = m;
+        });
+
 
         /*  Play Button  */
         CustomButton playButton = new CustomButton("play.png");
@@ -39,8 +64,10 @@ public class NavBar extends HBox {
         setBackground(new Background(new BackgroundFill(gradient(), CornerRadii.EMPTY, Insets.EMPTY)));
         setAlignment(Pos.CENTER_LEFT);
 
-        //getChildren().add(this);
+
     }
+
+
 
     Paint gradient(){
         Stop[] stops = new Stop[] {

@@ -8,6 +8,8 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Shape;
+
 import java.util.ArrayList;
 
 
@@ -27,27 +29,25 @@ public class SimulationCanvas {
     private void initCanvasMenu() {
         canvasMenu = new ContextMenu();
         relativeContextMenuCoord = new double[2];
-        MenuItem addMachine = new MenuItem("Add Machine");
-        MenuItem addQueue = new MenuItem("Add Queue");
-        MenuItem addConnection = new MenuItem("Add Connection");
-        MenuItem delete = new MenuItem("Delete");
+        MenuItem addMachineMenuItem = new MenuItem("Add Machine");
+        MenuItem addQueueMenuItem = new MenuItem("Add Queue");
+        MenuItem addConnectionMenuItem = new MenuItem("Add Connection");
+        MenuItem deleteShapeMenuItem = new MenuItem("Delete");
 
-        addMachine.setOnAction(e -> {
+        addMachineMenuItem.setOnAction(e -> {
             MachineGUI m = new MachineGUI(relativeContextMenuCoord[0], relativeContextMenuCoord[1]);
-            m.setOnMouseClicked(mouseEvent -> onShapeSelected(mouseEvent, m));
-            m.setOnMouseDragged(mouseEvent -> onShapeDragged(mouseEvent, m));
-            canvas.getChildren().add(m);
+            addDraggableShapeToCanvas(m);
         });
 
-        addQueue.setOnAction(e -> {
+
+
+
+        addQueueMenuItem.setOnAction(e -> {
             QueueGUI q = new QueueGUI(relativeContextMenuCoord[0], relativeContextMenuCoord[1]);
-            q.setOnMouseClicked(mouseEvent -> onShapeSelected(mouseEvent, q));
-            q.setOnMouseDragged(mouseEvent -> onShapeDragged(mouseEvent, q));
-            canvas.getChildren().add(q);
-
+            addDraggableShapeToCanvas(q);
         });
 
-        addConnection.setOnAction(e -> {
+        addConnectionMenuItem.setOnAction(e -> {
             if(source != null && destination != null &&
                     !(source instanceof QueueGUI && destination instanceof QueueGUI) &&
                     !(source instanceof MachineGUI && destination instanceof MachineGUI)
@@ -64,7 +64,7 @@ public class SimulationCanvas {
             }
         });
 
-        delete.setOnAction(e -> {
+        deleteShapeMenuItem.setOnAction(e -> {
             if(source != null) {
                 canvas.getChildren().remove(source);
                 ArrayList<Arrow> toBeDeleted = new ArrayList<Arrow>();
@@ -82,12 +82,17 @@ public class SimulationCanvas {
         });
 
 
-        canvasMenu.getItems().addAll(addMachine, addQueue, addConnection, delete);
+        canvasMenu.getItems().addAll(addMachineMenuItem, addQueueMenuItem, addConnectionMenuItem, deleteShapeMenuItem);
     }
 
 
     public SimulationCanvas() {
         initCanvasMenu();
+    }
+
+    @FXML
+    public void initialize() {
+        navbar.simulationCanvas = this;
     }
 
 
@@ -136,6 +141,15 @@ public class SimulationCanvas {
                 destination.setShapeStroke(null);
             source = null;
             destination = null;
+        }
+    }
+
+
+    public <S extends Shape & DraggableShape> void addDraggableShapeToCanvas(S shape){
+        if (!canvas.getChildren().contains(shape)) {
+            shape.setOnMouseClicked(mouseEvent -> onShapeSelected(mouseEvent, shape));
+            shape.setOnMouseDragged(mouseEvent -> onShapeDragged(mouseEvent, shape));
+            canvas.getChildren().add(shape);
         }
     }
 }
