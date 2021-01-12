@@ -1,14 +1,18 @@
 package model;
 
+import GUI.QueueGUI;
+
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 //import java.util.concurrent.locks.Lock;
+
 
 public class Queue {
     private final java.util.Queue<Product> internal;
     private final java.util.Queue<Machine> waitingList;
     //Lock enQLock; On second thoughts, i'll use the built in queues..
    // Lock deQLock;
+    public QueueGUI queueGUI;
 
     public Queue(){
         internal = new LinkedBlockingQueue<>();

@@ -1,5 +1,7 @@
 package model;
 
+import GUI.MachineGUI;
+
 public class Machine implements Runnable{
     private final Queue[] in;
     private final Queue out;
@@ -7,8 +9,9 @@ public class Machine implements Runnable{
     private final long time;
     private Product currentProduct;
     private volatile boolean stop = false;
+    public MachineGUI machineGUI;
 
-    public Machine(Queue[] in, Queue out, long time, String colour){
+    public Machine(Queue[] in, Queue out, long time, String colour) {
         this.in = in;
         this.out = out;
         this.time = time;
