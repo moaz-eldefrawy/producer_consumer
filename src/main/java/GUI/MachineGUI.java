@@ -70,7 +70,7 @@ public class MachineGUI extends Rectangle implements DraggableShape {
     }
 
     @Override
-    public ObservableList getConnections() {
+    public ObservableList<Arrow> getConnections() {
         return connections;
     }
 }

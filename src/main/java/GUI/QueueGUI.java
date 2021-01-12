@@ -69,7 +69,7 @@ public class QueueGUI extends Circle implements DraggableShape {
     }
 
     @Override
-    public ObservableList getConnections() {
+    public ObservableList<Arrow> getConnections() {
         return connections;
     }
 

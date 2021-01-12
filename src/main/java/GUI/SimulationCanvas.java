@@ -17,23 +17,25 @@ public class SimulationCanvas {
     DraggableShape source, destination;
     Arrow selectedArrow;
     ContextMenu canvasMenu;
+    double[] relativeContextMenuCoord;
 
     private void initCanvasMenu() {
         canvasMenu = new ContextMenu();
+        relativeContextMenuCoord = new double[2];
         MenuItem addMachine = new MenuItem("Add Machine");
         MenuItem addQueue = new MenuItem("Add Queue");
         MenuItem addConnection = new MenuItem("Add Connection");
         MenuItem delete = new MenuItem("Delete");
 
         addMachine.setOnAction(e -> {
-            MachineGUI m = new MachineGUI(canvasMenu.getX(), canvasMenu.getY());
+            MachineGUI m = new MachineGUI(relativeContextMenuCoord[0], relativeContextMenuCoord[1]);
             m.setOnMouseClicked(mouseEvent -> onShapeSelected(mouseEvent, m));
             m.setOnMouseDragged(mouseEvent -> onShapeDragged(mouseEvent, m));
             canvas.getChildren().add(m);
         });
 
         addQueue.setOnAction(e -> {
-            QueueGUI q = new QueueGUI(canvasMenu.getX(), canvasMenu.getY());
+            QueueGUI q = new QueueGUI(relativeContextMenuCoord[0], relativeContextMenuCoord[1]);
             q.setOnMouseClicked(mouseEvent -> onShapeSelected(mouseEvent, q));
             q.setOnMouseDragged(mouseEvent -> onShapeDragged(mouseEvent, q));
             canvas.getChildren().add(q);
@@ -95,7 +97,9 @@ public class SimulationCanvas {
     }
 
     public void showCanvasContextMenu(ContextMenuEvent contextMenuEvent) {
-        canvasMenu.show(canvas, contextMenuEvent.getX(), contextMenuEvent.getY());
+        canvasMenu.show(canvas, contextMenuEvent.getScreenX(), contextMenuEvent.getScreenY());//show with 3 args takes coords relative to screen
+        relativeContextMenuCoord[0] = contextMenuEvent.getX();
+        relativeContextMenuCoord[1] = contextMenuEvent.getY();
     }
 
     public void onShapeDragged(MouseEvent mouseEvent, DraggableShape s) {

@@ -49,7 +49,6 @@ public class Queue {
 
     /**
      * if no products in the queue, register machine as ready
-     * else obtain the lock on m and give it a product if it's ready
      * @return true if added to waiting list, false if queue already has a product*/
     public boolean registerMachine(Machine m){
         if(internal.isEmpty()){
