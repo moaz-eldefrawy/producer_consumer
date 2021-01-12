@@ -64,5 +64,4 @@ public class QueueGUI extends Circle implements DraggableShape {
         setStrokeWidth(3);
     }
 
-
 }

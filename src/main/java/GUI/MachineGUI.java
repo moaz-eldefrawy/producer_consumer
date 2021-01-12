@@ -58,5 +58,4 @@ public class MachineGUI extends Rectangle implements DraggableShape {
         setStroke(paint);
         setStrokeWidth(3);
     }
-
 }

@@ -37,7 +37,7 @@ public class Machine implements Runnable{
     }
 
     /**
-     * @return true if ready to process (no product currently being processed*/
+     * @return true if ready to process (no product currently being processed)*/
     public boolean isReady(){
         return currentProduct == null;
     }
@@ -75,11 +75,12 @@ public class Machine implements Runnable{
     }
 
     /**
+     * @param machineThread the thread which runs this machine
      * safe way to stop the machine:
-     * stops only if no product is currently being processed AND not waiting for any queue*/
-    public synchronized void stop(){
+     * stops only if no product is currently being processed*/
+    public synchronized void stop(Thread machineThread){
         this.stop = true;
-        Thread.currentThread().interrupt();
+        machineThread.interrupt();
     }
 
     public void run(){
