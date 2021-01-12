@@ -3,8 +3,6 @@ package GUI;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.shape.Polyline;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.shape.Shape;
 
 public class Arrow extends Group {
 
@@ -17,12 +15,14 @@ public class Arrow extends Group {
     private SimpleDoubleProperty x2 = new SimpleDoubleProperty();
     private SimpleDoubleProperty y2 = new SimpleDoubleProperty();
 
-
+    public DraggableShape source, destination;
 
 
     public Arrow(DraggableShape s1, DraggableShape s2)
     {
         super();
+        source = s1;
+        destination = s2;
         this.x1.set(s1.getXProperty().get());
         this.y1.set(s1.getYProperty().get());
         this.x2.set(s2.getXProperty().get());
@@ -43,10 +43,6 @@ public class Arrow extends Group {
 
         x2.bind(s2.getXProperty());
         y2.bind(s2.getYProperty());
-
-        s1.addConnection(this);
-        s2.addConnection(this);
-
     }
 
 

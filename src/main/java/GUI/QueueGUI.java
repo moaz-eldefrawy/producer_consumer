@@ -8,9 +8,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
+import java.util.ArrayList;
+
 public class QueueGUI extends Circle implements DraggableShape {
 
-    public ObservableList<Arrow> connections = FXCollections.observableArrayList();
 
     public QueueGUI(double x, double y) {
         setCenterX(x);
@@ -63,14 +64,5 @@ public class QueueGUI extends Circle implements DraggableShape {
         setStrokeWidth(3);
     }
 
-    @Override
-    public void addConnection(Arrow arrow) {
-        connections.add(arrow);
-    }
-
-    @Override
-    public ObservableList getConnections() {
-        return connections;
-    }
 
 }

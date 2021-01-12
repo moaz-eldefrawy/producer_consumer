@@ -2,9 +2,7 @@ package GUI;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
@@ -12,12 +10,11 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.*;
 
-public class MainWindow extends Group {
+public class NavBar extends HBox {
     double iconsSize = 50;
-    HBox box = new HBox();
 
 
-    public MainWindow(){
+    public NavBar(){
         super();
 
         /*  Machine Button */
@@ -30,17 +27,19 @@ public class MainWindow extends Group {
 
         /*  Play Button  */
         CustomButton playButton = new CustomButton("play.png");
-        playButton.setOnMouseClicked(e -> System.out.println("Start Clicked"));
+        playButton.setOnMouseClicked(e -> {
+            getParent().getChildrenUnmodifiable();
+        });
 
         /*  Replay Button  */
         CustomButton rePlayButton = new CustomButton("replay.png");
         rePlayButton.setOnMouseClicked(e -> System.out.println("Replay Clicked"));
 
         /*  Composing the HBox   */
-        box.setBackground(new Background(new BackgroundFill(gradient(), CornerRadii.EMPTY, Insets.EMPTY)));
-        box.setAlignment(Pos.CENTER_LEFT);
+        setBackground(new Background(new BackgroundFill(gradient(), CornerRadii.EMPTY, Insets.EMPTY)));
+        setAlignment(Pos.CENTER_LEFT);
 
-        getChildren().add(box);
+        //getChildren().add(this);
     }
 
     Paint gradient(){
@@ -52,7 +51,7 @@ public class MainWindow extends Group {
     }
 
 
-    private class CustomButton extends Button{
+    private class CustomButton extends Button {
         /**
          *
          * @param imagePath: The button will have this image as its graphic.
@@ -70,8 +69,7 @@ public class MainWindow extends Group {
             machine_iv.setFitHeight(iconsSize);
             machine_iv.setPreserveRatio(true);
             this.setGraphic(machine_iv);
-
-            box.getChildren().add(this);
+            NavBar.this.getChildren().add(this);
         }
 
     }

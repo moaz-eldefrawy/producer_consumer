@@ -2,7 +2,6 @@ package GUI;
 
 import javafx.fxml.FXML;
 import javafx.scene.control.ContextMenu;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
@@ -10,13 +9,19 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+
 public class SimulationCanvas {
 
     @FXML
     Pane canvas;
+    @FXML
+    NavBar navbar;
     DraggableShape source, destination;
     Arrow selectedArrow;
     ContextMenu canvasMenu;
+    ArrayList<Arrow> allConnections = new ArrayList<Arrow>();
+
 
     private void initCanvasMenu() {
         canvasMenu = new ContextMenu();
@@ -45,11 +50,14 @@ public class SimulationCanvas {
                     !(source instanceof QueueGUI && destination instanceof QueueGUI) &&
                     !(source instanceof MachineGUI && destination instanceof MachineGUI)
             ) {
+                if(source instanceof MachineGUI) {
+                    for(Arrow a: allConnections)
+                        if(a.source == source)
+                            return;
+                }
                 Arrow arrow = new Arrow(source, destination);
+                allConnections.add(arrow);
                 canvas.getChildren().add(arrow);
-                //TODO: Adjacency List Logic
-
-
                 clearSelection(null);
             }
         });
@@ -57,9 +65,16 @@ public class SimulationCanvas {
         delete.setOnAction(e -> {
             if(source != null) {
                 canvas.getChildren().remove(source);
-                for (Arrow arrow : source.getConnections()) {
-                    canvas.getChildren().remove(arrow);
+                ArrayList<Arrow> toBeDeleted = new ArrayList<Arrow>();
+                for (Arrow arrow: allConnections) {
+                    if(arrow.source == source || arrow.destination == source) {
+                        canvas.getChildren().remove(arrow);
+                        toBeDeleted.add(arrow);
+                    }
                 }
+                allConnections.removeAll(toBeDeleted);
+                for(Arrow a : allConnections)
+                    System.out.println(a.toString());
                 clearSelection(null);
             }
         });
@@ -109,7 +124,7 @@ public class SimulationCanvas {
 
 
     public void clearSelection(MouseEvent mouseEvent) {
-        if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+        if(mouseEvent == null || mouseEvent.getButton() == MouseButton.PRIMARY) {
             System.out.println("Clear Selection");
             if (source != null)
                 source.setShapeStroke(null);

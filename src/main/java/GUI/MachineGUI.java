@@ -1,18 +1,13 @@
 package GUI;
 
 import javafx.beans.property.DoubleProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.scene.Cursor;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 
+
 public class MachineGUI extends Rectangle implements DraggableShape {
-    public ObservableList<Arrow> connections = FXCollections.observableArrayList();
 
     public MachineGUI(double x, double y) {
         setX(x);
@@ -64,13 +59,4 @@ public class MachineGUI extends Rectangle implements DraggableShape {
         setStrokeWidth(3);
     }
 
-    @Override
-    public void addConnection(Arrow arrow) {
-        connections.add(arrow);
-    }
-
-    @Override
-    public ObservableList getConnections() {
-        return connections;
-    }
 }

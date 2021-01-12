@@ -10,6 +10,4 @@ public interface DraggableShape {
     public void setYProperty(double y);
     public DoubleProperty getYProperty();
     public void setShapeStroke(Paint paint);
-    public void addConnection(Arrow arrow);
-    public ObservableList<Arrow> getConnections();
 }
