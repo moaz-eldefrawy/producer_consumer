@@ -37,6 +37,7 @@ public class SimulationCanvas {
             m.setOnMouseClicked(mouseEvent -> onShapeSelected(mouseEvent, m));
             m.setOnMouseDragged(mouseEvent -> onShapeDragged(mouseEvent, m));
             canvas.getChildren().add(m);
+            canvas.getChildren().add(m.text);
         });
 
         addQueue.setOnAction(e -> {
@@ -44,6 +45,7 @@ public class SimulationCanvas {
             q.setOnMouseClicked(mouseEvent -> onShapeSelected(mouseEvent, q));
             q.setOnMouseDragged(mouseEvent -> onShapeDragged(mouseEvent, q));
             canvas.getChildren().add(q);
+            canvas.getChildren().add(q.text);
 
         });
 
@@ -67,6 +69,7 @@ public class SimulationCanvas {
         delete.setOnAction(e -> {
             if(source != null) {
                 canvas.getChildren().remove(source);
+                canvas.getChildren().remove(source.getText());
                 ArrayList<Arrow> toBeDeleted = new ArrayList<Arrow>();
                 for (Arrow arrow: allConnections) {
                     if(arrow.source == source || arrow.destination == source) {

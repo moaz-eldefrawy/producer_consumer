@@ -7,22 +7,25 @@ import javafx.scene.Cursor;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Text;
 
 import java.util.ArrayList;
 
 public class QueueGUI extends Circle implements DraggableShape {
-
+    public Text text = new Text("fsdfdfsd");
 
     public QueueGUI(double x, double y) {
         setCenterX(x);
         setCenterY(y);
 
         setRadius(50);
-
+        text.xProperty().bind(centerXProperty());
+        text.yProperty().bind(centerYProperty());
         setFill(Color.DARKGOLDENROD);
 
         setOnDragDetected(mouseEvent -> {
             toFront();
+            text.toFront();
         });
 
 
@@ -64,4 +67,8 @@ public class QueueGUI extends Circle implements DraggableShape {
         setStrokeWidth(3);
     }
 
+    @Override
+    public Text getText() {
+        return text;
+    }
 }
