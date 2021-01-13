@@ -5,13 +5,19 @@ import javafx.scene.Cursor;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Text;
 
 
 public class MachineGUI extends Rectangle implements DraggableShape {
 
+    Text text = new Text("HAHA");
     public MachineGUI(double x, double y) {
         setX(x);
         setY(y);
+
+        text.xProperty().bind(xProperty());
+        text.yProperty().bind(yProperty());
+
         setWidth(100);
         setHeight(100);
         translateXProperty().bind(widthProperty().divide(-2));
@@ -20,6 +26,7 @@ public class MachineGUI extends Rectangle implements DraggableShape {
 
         setOnDragDetected(mouseEvent -> {
             toFront();
+            text.toFront();
         });
 
 
@@ -57,5 +64,10 @@ public class MachineGUI extends Rectangle implements DraggableShape {
     public void setShapeStroke(Paint paint) {
         setStroke(paint);
         setStrokeWidth(3);
+    }
+
+    @Override
+    public Text getText() {
+        return text;
     }
 }

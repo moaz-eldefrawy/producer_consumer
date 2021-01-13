@@ -43,14 +43,14 @@ public class SimulationCanvas {
         addMachineMenuItem.setOnAction(e -> {
             MachineGUI m = new MachineGUI(relativeContextMenuCoord[0], relativeContextMenuCoord[1]);
             addDraggableShapeToCanvas(m);
+            canvas.getChildren().add(m.text);
         });
-
-
 
 
         addQueueMenuItem.setOnAction(e -> {
             QueueGUI q = new QueueGUI(relativeContextMenuCoord[0], relativeContextMenuCoord[1]);
             addDraggableShapeToCanvas(q);
+            canvas.getChildren().add(q.text);
         });
 
         addConnectionMenuItem.setOnAction(e -> {
@@ -73,6 +73,7 @@ public class SimulationCanvas {
         deleteShapeMenuItem.setOnAction(e -> {
             if(source != null) {
                 canvas.getChildren().remove(source);
+                canvas.getChildren().remove(source.getText());
                 ArrayList<Arrow> toBeDeleted = new ArrayList<Arrow>();
                 for (Arrow arrow: allConnections) {
                     if(arrow.source == source || arrow.destination == source) {

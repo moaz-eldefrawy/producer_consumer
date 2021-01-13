@@ -3,6 +3,7 @@ package GUI;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.paint.Paint;
+import javafx.scene.text.Text;
 
 public interface DraggableShape {
     public DoubleProperty getXProperty();
@@ -10,4 +11,5 @@ public interface DraggableShape {
     public void setYProperty(double y);
     public DoubleProperty getYProperty();
     public void setShapeStroke(Paint paint);
+    public Text getText();
 }
