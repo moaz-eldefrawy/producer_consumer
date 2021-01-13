@@ -51,6 +51,13 @@ public class Machine implements Runnable{
             e.printStackTrace();
         }
         out.enqueue(currentProduct);
+        machineGUI.setFill(Color.WHITE);
+        try{
+            Thread.sleep(20);
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+        machineGUI.setFill(Color.GREEN);
         currentProduct = null;
         report();
     }
