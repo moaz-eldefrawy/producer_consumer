@@ -16,12 +16,13 @@ import javax.crypto.Mac;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Random;
 
 
 public class SimulationCanvas {
 
     @FXML
-    Pane canvas;
+    public Pane canvas;
     @FXML
     NavBar navbar;
     DraggableShape source, destination;
@@ -158,9 +159,15 @@ public class SimulationCanvas {
         canvas.getChildren().add(shape);
     }
 
-    public HashSet<Machine> getMachines(){
-        HashMap<DraggableShape, Queue> queueInstances = new HashMap<>();
-        HashMap<DraggableShape, MachineBuilder> machineInstances = new HashMap<>();
+    HashMap<DraggableShape, Queue> queueInstances;
+    HashMap<DraggableShape, MachineBuilder> machineInstances;
+    Graph graph;
+
+    public Graph getMachines(){
+        queueInstances = new HashMap<>();
+        machineInstances = new HashMap<>();
+        HashSet<Queue> destQueues = new HashSet<Queue>();
+        graph = new Graph();
 
         //create the queue instances from the QueueGui instances
         //create the MachineBuilder instances from the MachineGUI instances
@@ -168,11 +175,16 @@ public class SimulationCanvas {
             //System.out.println("Class = " + node.getClass());
             if (node.getClass() == QueueGUI.class) {
                 //System.out.println("it is a queue!");
-                queueInstances.put((DraggableShape) node, new Queue());
+                Queue tmp = new Queue();
+                tmp.setQueueGUI((QueueGUI) node);
+                graph.queues.add(tmp);
+                queueInstances.put((DraggableShape) node, tmp);
             }
             else if (node.getClass() == MachineGUI.class) {
                 //System.out.println("it is a Machine!");
-                machineInstances.put((DraggableShape) node, new MachineBuilder());
+                MachineBuilder m = new MachineBuilder();
+                m.setMachineGUI((MachineGUI)node);
+                machineInstances.put((DraggableShape) node, m);
             }
         }
 
@@ -184,10 +196,35 @@ public class SimulationCanvas {
                 //Get the MachineBuilder instance from the machines HashMap
                 //Set the destination to be the Queue instance from the HashMap
                 machineInstances.get(arrow.source).setDestination(queueInstances.get(arrow.destination));
+                destQueues.add( queueInstances.get(arrow.destination) );
             }
-            else
+            else {
                 machineInstances.get(arrow.destination).addSource(queueInstances.get(arrow.source));
+            }
         }
+
+        /*System.out.println("dest queues:");
+        for(Queue q: destQueues){
+            System.out.println(q);
+        }*/
+        /**  get starting queues and fill with random num of products **/
+        for (HashMap.Entry mapElement : queueInstances.entrySet()) {
+            Queue value = (Queue) mapElement.getValue();
+            if(destQueues.contains(value) == false){
+                graph.startQueues.add(value);
+                /* init the queue with random products */
+                int numOfProducts = new Random().nextInt(10)+1;
+                System.out.println(numOfProducts);
+                while(numOfProducts != 0) {
+                    //Color
+                    Random r = new Random();
+                    value.enqueue(new Product(Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble())));
+                    numOfProducts--;
+                }
+            }
+            value.report();
+        }
+        System.out.println("Number of Start Queues:" + graph.startQueues.size());
 
         // Printing test
         System.out.println("Queues: ");
@@ -205,9 +242,14 @@ public class SimulationCanvas {
         for (MachineBuilder builder: machineInstances.values()){
             machines.add(builder.getResult());
         }
+        graph.machines = machines;
 
-
-
-        return machines;
+        return graph;
     }
+
+    public void resetGraph(){
+
+    }
+
+
 }

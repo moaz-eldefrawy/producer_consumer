@@ -10,7 +10,8 @@ import javafx.scene.text.Text;
 
 public class MachineGUI extends Rectangle implements DraggableShape {
 
-    Text text = new Text("HAHA");
+    Text text = new Text("Machine");
+    Color color;
     public MachineGUI(double x, double y) {
         setX(x);
         setY(y);

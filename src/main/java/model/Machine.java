@@ -58,6 +58,8 @@ public class Machine implements Runnable{
     /**reports event to GUI and stores it in log*/
     private void report(){
         Color nextState = getColour();
+        System.out.println(nextState.toString());
+        System.out.println(machineGUI);
         machineGUI.setFill(nextState);
         log.offer(new Memento(nextState,simStart - System.currentTimeMillis()));
     }

@@ -26,6 +26,11 @@ public class Queue{
     }
 
 
+    public synchronized void clear(){
+        internal.clear();
+        waitingList.clear();
+        log.clear();
+    }
     /**
      * adds product to this queue*/
     public synchronized void enqueue(Product product){
@@ -55,7 +60,7 @@ public class Queue{
     }
 
     /**reports to GUI and updates log*/
-    private void report(){
+    public void report(){
         String nextState = Integer.toString(internal.size());
         queueGUI.setText(nextState);
         log.offer(nextState);
@@ -86,4 +91,8 @@ public class Queue{
         queueGUI.setText(nextState);
     }
 
+    public void setQueueGUI(QueueGUI queueGUI) {
+        this.queueGUI = queueGUI;
+        report();
+    }
 }

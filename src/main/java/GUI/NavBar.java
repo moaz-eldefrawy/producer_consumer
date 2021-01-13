@@ -13,16 +13,22 @@ import javafx.scene.layout.HBox;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Shape;
 import model.Machine;
+import model.Product;
+import model.Queue;
 
+import javax.crypto.Mac;
 import javax.xml.transform.Source;
 import java.beans.EventHandler;
-import java.util.Arrays;
-import java.util.Date;
+import java.util.*;
 
 public class NavBar extends HBox {
     double iconsSize = 50;
     public SimulationCanvas simulationCanvas;
     DraggableShape curr;
+
+    ArrayList<Thread> machineThreads = new ArrayList<>();
+    HashSet<Machine> machines;
+
 
     public NavBar(){
         super();
@@ -35,6 +41,7 @@ public class NavBar extends HBox {
         addMachineBtn.setOnMousePressed(e -> {
             MachineGUI m = new MachineGUI(e.getSceneX(), e.getSceneY());
             simulationCanvas.addDraggableShapeToCanvas(m);
+            simulationCanvas.canvas.getChildren().add(m.text);
             curr = m;
         });
 
@@ -49,6 +56,7 @@ public class NavBar extends HBox {
         addQueueBtn.setOnMousePressed(e -> {
             QueueGUI m = new QueueGUI(e.getSceneX(), e.getSceneY());
             simulationCanvas.addDraggableShapeToCanvas(m);
+            simulationCanvas.canvas.getChildren().add(m.text);
             curr = m;
         });
 
@@ -56,13 +64,31 @@ public class NavBar extends HBox {
         /*  Play Button  */
         CustomButton playButton = new CustomButton("play.png");
         playButton.setOnMouseClicked(e -> {
+            Graph graph = simulationCanvas.getMachines();
+            machines = graph.machines;
 
-            System.out.println(Arrays.toString(simulationCanvas.getMachines().toArray()));
+            Iterator<Machine> machine = machines.iterator();
+            while(machine.hasNext())
+            {
+                Machine currMachine = machine.next();
+                Thread currThread = new Thread(currMachine);
+                currThread.start();
+                machineThreads.add( currThread );
+                /** get first node **/
+
+            }
+
+            //System.out.println(Arrays.toString(simulationCanvas.getMachines().toArray()));
         });
 
         /*  Replay Button  */
         CustomButton rePlayButton = new CustomButton("replay.png");
-        rePlayButton.setOnMouseClicked(e -> System.out.println("Replay Clicked"));
+        rePlayButton.setOnMouseClicked(e -> {
+            System.out.println("Replay Clicked");
+            for(Machine machine: machines){
+                machine.startReplay();
+            }
+        });
 
         /*  Composing the HBox   */
         setBackground(new Background(new BackgroundFill(gradient(), CornerRadii.EMPTY, Insets.EMPTY)));

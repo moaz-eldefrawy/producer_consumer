@@ -13,6 +13,9 @@ public class MachineBuilder{
     public Queue destinationQueue = null;
     public ArrayList<Queue> sourceQueues = new ArrayList<>();
 
+
+    public MachineGUI machineGUI;
+
     public MachineBuilder(){}
 
     public void addSource(Queue q){
@@ -21,6 +24,10 @@ public class MachineBuilder{
 
     public void setDestination(Queue q){
         destinationQueue = q;
+    }
+
+    public void setMachineGUI(MachineGUI machineGUI) {
+        this.machineGUI = machineGUI;
     }
 
     public Machine getResult(){
@@ -36,11 +43,13 @@ public class MachineBuilder{
         }
 
         //TODO generate time and color
-        Random r = new Random(10);
+        Random r = new Random();
         final int millisecondsPerSecond = 1000;
-        final int machineProcessingTime  = (r.nextInt()+1) * millisecondsPerSecond;
+        final int machineProcessingTime  = (r.nextInt(4)+1) * millisecondsPerSecond;
 
-        return new Machine(in , destinationQueue, machineProcessingTime
-                , Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble()));
+        Machine m = new Machine(in , destinationQueue, machineProcessingTime
+                , Color.color(0,0.5,0));
+        m.machineGUI = this.machineGUI;
+        return m;
     }
 }
