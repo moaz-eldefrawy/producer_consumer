@@ -16,8 +16,10 @@ import model.Machine;
 
 import javax.xml.transform.Source;
 import java.beans.EventHandler;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.HashSet;
 
 public class NavBar extends HBox {
     double iconsSize = 50;
@@ -56,8 +58,8 @@ public class NavBar extends HBox {
         /*  Play Button  */
         CustomButton playButton = new CustomButton("play.png");
         playButton.setOnMouseClicked(e -> {
-
-            System.out.println(Arrays.toString(simulationCanvas.getMachines().toArray()));
+            ArrayList<Machine> machines = simulationCanvas.getMachines(simulationCanvas.canvas);
+            System.out.println(Arrays.toString(machines.toArray()));
         });
 
         /*  Replay Button  */

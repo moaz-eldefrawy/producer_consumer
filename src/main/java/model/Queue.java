@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class Queue{
-    private final java.util.Queue<Product> internal = new LinkedBlockingQueue<>();
+    public final java.util.Queue<Product> internal = new LinkedBlockingQueue<>();
     private final java.util.Queue<Machine> waitingList;
     private final java.util.Queue<String> log = new LinkedBlockingQueue<>();
     //Lock enQLock; On second thoughts, i'll use the built in queues..
