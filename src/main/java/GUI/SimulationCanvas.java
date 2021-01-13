@@ -187,7 +187,6 @@ public class SimulationCanvas {
             }
         }
 
-
         for (Arrow arrow: allConnections){
             //System.out.println("Arrow contecting from " + arrow.source.hashCode() + ", to " + arrow.destination.hashCode());
             //The source is a machine
@@ -206,20 +205,14 @@ public class SimulationCanvas {
         for(Queue q: destQueues){
             System.out.println(q);
         }*/
+
         /**  get starting queues and fill with random num of products **/
         for (HashMap.Entry mapElement : queueInstances.entrySet()) {
             Queue value = (Queue) mapElement.getValue();
             if(destQueues.contains(value) == false){
                 graph.startQueues.add(value);
                 /* init the queue with random products */
-                int numOfProducts = new Random().nextInt(10)+1;
-                System.out.println(numOfProducts);
-                while(numOfProducts != 0) {
-                    //Color
-                    Random r = new Random();
-                    value.enqueue(new Product(Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble())));
-                    numOfProducts--;
-                }
+                fillQueueWtihProducts(value);
             }
             value.report();
         }
@@ -242,11 +235,31 @@ public class SimulationCanvas {
         for (MachineBuilder builder: machineInstances.values()){
             machines.add(builder.getResult());
         }
+        //graph.emptyQueues();
         graph.machines = machines;
 
         return graph;
     }
 
+    public Graph resetSimulation(){
+        graph.emptyQueues();
+        for(Queue q: graph.startQueues){
+            fillQueueWtihProducts(q);
+        }
+        // assumtion same timer
+        return graph;
+    }
+
+    void fillQueueWtihProducts(Queue value){
+        int numOfProducts = new Random().nextInt(10)+1;
+        System.out.println(numOfProducts);
+        while(numOfProducts != 0) {
+            //Color
+            Random r = new Random();
+            value.enqueue(new Product(Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble())));
+            numOfProducts--;
+        }
+    }
 
 
 

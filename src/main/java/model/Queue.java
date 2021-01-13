@@ -28,7 +28,6 @@ public class Queue{
 
     public synchronized void clear(){
         internal.clear();
-        waitingList.clear();
         log.clear();
     }
     /**

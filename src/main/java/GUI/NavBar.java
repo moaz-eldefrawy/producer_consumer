@@ -68,7 +68,18 @@ public class NavBar extends HBox {
         /*  Play Button  */
         CustomButton playButton = new CustomButton("play.png");
         playButton.setOnMouseClicked(e -> {
-            Graph graph = simulationCanvas.getMachines();
+
+            int count = Thread.activeCount();
+            System.out.println("currently active threads = " + count);
+            Graph graph;
+            if(machineThreads.size() == 0)// first simulation
+                 graph = simulationCanvas.getMachines();
+            else { // assumption simulation has ended
+                graph = simulationCanvas.resetSimulation();
+                return;
+                //machineThreads.clear();
+
+            }
             machines = graph.machines;
 
             Iterator<Machine> machine = machines.iterator();
