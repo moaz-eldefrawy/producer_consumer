@@ -253,13 +253,14 @@ public class SimulationCanvas {
 
     void fillQueueWtihProducts(Queue value){
         int numOfProducts = new Random().nextInt(10)+1;
-        System.out.println(numOfProducts);
-        while(numOfProducts != 0) {
+        //System.out.println(numOfProducts);
+        Product[] products = new Product[numOfProducts];
+        for(int i = 0; i < numOfProducts; i++) {
             //Color
             Random r = new Random();
-            value.enqueue(new Product(Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble())));
-            numOfProducts--;
+            products[i] = new Product(Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble()));
         }
+        value.setProducts(products);
     }
 
 

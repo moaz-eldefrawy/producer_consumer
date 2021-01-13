@@ -77,6 +77,10 @@ public class Machine implements Runnable{
         long currentReplayStamp = 0, tempTime;
         int logSize = log.size()/2;
         machineGUI.setFill(colour);
+        out.resetForReplay();
+        for (Queue q: in){
+            q.resetForReplay();
+        }
         try {
             for(int i = 0; i < logSize; i++){
                 Memento memento = log.remove(); //event: processing next product
