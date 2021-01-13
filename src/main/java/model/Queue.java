@@ -29,6 +29,7 @@ public class Queue{
     public synchronized void clear(){
         internal.clear();
         log.clear();
+        updateText();
     }
     /**
      * USED DURING SIMULATION. To set initial products for source Queues, use setProducts

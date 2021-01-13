@@ -150,10 +150,7 @@ public class Machine implements Runnable{
             try {
                 this.wait();
             } catch (InterruptedException e) {
-                if(!stop && !replay) //the interrupt was not caused by stop method nor startReplay
-                    e.printStackTrace();
-                else
-                    return;
+                return;
             }
         }
         processProduct();
@@ -241,8 +238,11 @@ public class Machine implements Runnable{
                 try {
                     wait();
                 } catch (InterruptedException e) {
-                    if(!stop && !replay)
+                    if(!stop && !replay){
+                        init();
                         run();
+                    }
+
                 }
             }
         }
