@@ -56,7 +56,8 @@ public class Queue{
      * pulls product from queue*/
     public Product dequeue(){
         Product ans = internal.poll();
-        report();
+        if(ans != null) //don't report a zero when the last value was already a zero!
+            report();
         return ans;
     }
 

@@ -81,8 +81,10 @@ public class Machine implements Runnable{
         int logSize = log.size()/2;
         machineGUI.setFill(colour);
         out.resetForReplay();
+        System.out.println(out.printLog("out"));
         for (Queue q: in){
             q.resetForReplay();
+            System.out.println(q.printLog("q_in"));
         }
         try {
             for(int i = 0; i < logSize; i++){
@@ -219,6 +221,7 @@ public class Machine implements Runnable{
             boolean found = false;
             for (Queue q : in){
                 currentProduct = q.dequeue();
+                System.out.println("Dequeued here");
                 if(currentProduct != null){
                     found = true;
                     break;
@@ -231,9 +234,19 @@ public class Machine implements Runnable{
             }
         }
 
-        if(stop) return;
+        while(!stop){
+            replay();
+            replay = false;
+            synchronized (this){
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    if(!stop && !replay)
+                        run();
+                }
+            }
+        }
 
-        replay();
     }
 
 }
