@@ -23,4 +23,11 @@ public class Graph {
             q.clear();
         }
     }
+
+    public void resetMachines(){
+        for(Machine m : machines){
+            m.stop();
+            m.restart();
+        }
+    }
 }

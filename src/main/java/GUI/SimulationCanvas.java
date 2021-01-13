@@ -214,7 +214,7 @@ public class SimulationCanvas {
                 /* init the queue with random products */
                 fillQueueWtihProducts(value);
             }
-            value.report();
+            value.updateText();
         }
         System.out.println("Number of Start Queues:" + graph.startQueues.size());
 
@@ -243,6 +243,7 @@ public class SimulationCanvas {
 
     public Graph resetSimulation(){
         graph.emptyQueues();
+        graph.resetMachines();
         for(Queue q: graph.startQueues){
             fillQueueWtihProducts(q);
         }

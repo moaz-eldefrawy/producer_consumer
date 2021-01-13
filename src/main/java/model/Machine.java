@@ -31,6 +31,7 @@ public class Machine implements Runnable{
         this.time = time;
         this.colour = colour;
         machineGUI = new MachineGUI(0,0);
+        init();
     }
 
     private static class Memento{
@@ -73,12 +74,17 @@ public class Machine implements Runnable{
 
     /**pops events from logs and displays them*/
     private void replay(){
-        long currentReplayStamp = 0;
+        long currentReplayStamp = 0, tempTime;
+        int logSize = log.size();
+        machineGUI.setFill(colour);
         try {
-            while(!log.isEmpty()){
+            for(int i = 0; i < logSize; i++){
                 Memento memento = log.remove(); //event: processing next product
-                Thread.sleep(memento.timestamp - currentReplayStamp); //sleep till its time comes
+                tempTime = memento.timestamp - currentReplayStamp;
+                if(tempTime > 0)
+                    Thread.sleep(tempTime); //sleep till its time comes
                 currentReplayStamp = memento.timestamp; //ready for pushing event
+                log.offer(memento); //if we need to replay again
 
                 for(Queue q : in){ //refresh input queues
                     q.replay();
@@ -86,8 +92,11 @@ public class Machine implements Runnable{
                 machineGUI.setFill(memento.nextState);//change colour
 
                 memento = log.remove(); //event: pushing the product to out
-                Thread.sleep(memento.timestamp - currentReplayStamp);//sleep till its time comes
+                tempTime = memento.timestamp - currentReplayStamp;
+                if(tempTime > 0)
+                    Thread.sleep(tempTime);//sleep till its time comes
                 currentReplayStamp = memento.timestamp;//ready for next product
+                log.offer(memento); //if we need to replay again
 
                 out.replay();
                 machineGUI.setFill(memento.nextState);
@@ -142,6 +151,37 @@ public class Machine implements Runnable{
         processProduct();
     }
 
+
+    public Color getColour(){
+        if(currentProduct == null){
+            return this.colour;
+        }else{
+            return currentProduct.colour;
+        }
+    }
+
+    /**for testing*/
+    public String printLog(){
+        Memento[] temp = log.toArray(Memento[]::new);
+        StringBuilder sb = new StringBuilder();
+        sb.append(machineThread.getName());
+        sb.append(": ");
+        for(Memento m : temp){
+            sb.append(m.nextState);
+            sb.append(", ");
+        }
+        return sb.toString();
+    }
+
+    public Queue[] getSources (){
+        return in;
+    }
+    public Queue getDestination (){
+        return out;
+    }
+
+    /*control methods*/
+
     /**
      * safe way to stop the machine:
      * stops only if no product is currently being processed*/
@@ -152,13 +192,18 @@ public class Machine implements Runnable{
 
     /**stops the current simulation and replays it*/
     public void startReplay(){
+        stop = false;
         replay = true;
         machineThread.interrupt();
     }
 
+    /**restarts the simulation from scratch with the same machines and queues*/
+    public void restart(){
+        init();
+    }
+
     /**runs a single simulation and can replay it*/
     public void run(){
-        init();
         machineThread = Thread.currentThread();
         while (!stop && !replay){
             boolean found = false;
@@ -181,23 +226,4 @@ public class Machine implements Runnable{
         replay();
     }
 
-    public Color getColour(){
-        if(currentProduct == null){
-            return this.colour;
-        }else{
-            return currentProduct.colour;
-        }
-    }
-
-    /**for testing*/
-    public String printLog(){
-        return "";
-    }
-
-    public Queue[] getSources (){
-        return in;
-    }
-    public Queue getDestination (){
-        return out;
-    }
 }

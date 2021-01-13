@@ -29,7 +29,9 @@ class MachineTest {
             e.printStackTrace();
         }
         assertEquals(Color.RED, m1.getColour());
-
+        System.out.println(m1.printLog());
+        System.out.println(q_out.printLog("Q_out"));
+        System.out.println(q_in.printLog("Q_in"));
     }
 
     @Test
@@ -71,6 +73,10 @@ class MachineTest {
             e.printStackTrace();
         }
         assertEquals(Color.RED, m1.getColour());
+
+        System.out.println(m1.printLog());
+        System.out.println(q_out.printLog("Q_out"));
+        System.out.println(q_in.printLog("Q_in"));
     }
 
     @Test
@@ -108,6 +114,11 @@ class MachineTest {
         assertTrue(q_in[0].isEmpty());
         assertTrue(q_in[1].isEmpty());
         assertEquals(7, q_out.size());
+
+        System.out.println(m1.printLog());
+        System.out.println(q_out.printLog("Q_out"));
+        System.out.println(q_in[0].printLog("Q_in_0"));
+        System.out.println(q_in[1].printLog("Q_in_1"));
     }
 
     @Test
@@ -143,5 +154,12 @@ class MachineTest {
         assertTrue(q_in[0].isEmpty());
         assertTrue(q_in[1].isEmpty());
         assertEquals(7, q_out.size());
+
+        System.out.println(m1.printLog());
+        System.out.println(m2.printLog());
+        System.out.println(q_out.printLog("Q_out"));
+        System.out.println(q_in[0].printLog("Q_in_0"));
+        System.out.println(q_in[1].printLog("Q_in_1"));
+
     }
 }

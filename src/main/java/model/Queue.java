@@ -11,7 +11,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class Queue{
-    public final java.util.Queue<Product> internal = new LinkedBlockingQueue<>();
+    private final java.util.Queue<Product> internal = new LinkedBlockingQueue<>();
     private final java.util.Queue<Machine> waitingList;
     private final java.util.Queue<String> log = new LinkedBlockingQueue<>();
     //Lock enQLock; On second thoughts, i'll use the built in queues..
@@ -20,6 +20,7 @@ public class Queue{
 
     public Queue(){
         waitingList = new LinkedBlockingQueue<>();
+        queueGUI = new QueueGUI(0,0); //TODO how in blazes is this supposed to be set?
     }
     public Queue(int m){
         waitingList = new ArrayBlockingQueue<>(m);
@@ -59,10 +60,14 @@ public class Queue{
     }
 
     /**reports to GUI and updates log*/
-    public void report(){
+    private void report(){
         String nextState = Integer.toString(internal.size());
         queueGUI.setText(nextState);
         log.offer(nextState);
+    }
+
+    public void updateText(){
+        queueGUI.setText(Integer.toString(internal.size()));
     }
 
     public boolean isEmpty(){
@@ -88,6 +93,18 @@ public class Queue{
     public void replay(){
         String nextState = log.remove(); //should never be null, but idk
         queueGUI.setText(nextState);
+        log.offer(nextState); //if we need to replay multiple times
+    }
+
+    public String printLog( String name ){
+        String[] temp = log.toArray(String[]::new);
+        StringBuilder sb = new StringBuilder(name);
+        sb.append(": ");
+        for(String s : temp){
+            sb.append(s);
+            sb.append(", ");
+        }
+        return sb.toString();
     }
 
     public void setQueueGUI(QueueGUI queueGUI) {
