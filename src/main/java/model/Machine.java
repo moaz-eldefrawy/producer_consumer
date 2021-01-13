@@ -55,22 +55,24 @@ public class Machine implements Runnable{
             e.printStackTrace();
         }
         out.enqueue(currentProduct);
+        flicker();
+        currentProduct = null;
+        report();
+    }
+
+    /**Flickers and stores it in log*/
+    private void flicker(){
         machineGUI.setFill(Color.WHITE);
         try{
             Thread.sleep(100);
         }catch (InterruptedException e){
             e.printStackTrace();
         }
-        machineGUI.setFill(Color.GREEN);
-        currentProduct = null;
-        report();
     }
 
     /**reports event to GUI and stores it in log*/
     private void report(){
         Color nextState = getColour();
-        System.out.println(nextState.toString());
-        System.out.println(machineGUI);
         machineGUI.setFill(nextState);
         log.offer(new Memento(nextState,System.currentTimeMillis() - simStart));
     }
@@ -107,6 +109,7 @@ public class Machine implements Runnable{
                 log.offer(memento); //if we need to replay again
 
                 out.replay();
+                flicker();
                 machineGUI.setFill(memento.nextState);
             }
         }catch (InterruptedException e){
