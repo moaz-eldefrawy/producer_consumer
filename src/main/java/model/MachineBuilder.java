@@ -36,7 +36,11 @@ public class MachineBuilder{
         }
 
         //TODO generate time and color
-        Random r = new Random();
-        return new Machine(in , destinationQueue, r.nextLong(), Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble()));
+        Random r = new Random(10);
+        final int millisecondsPerSecond = 1000;
+        final int machineProcessingTime  = r.nextInt() * millisecondsPerSecond;
+
+        return new Machine(in , destinationQueue, machineProcessingTime
+                , Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble()));
     }
 }
