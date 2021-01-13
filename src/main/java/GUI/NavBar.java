@@ -12,8 +12,11 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.*;
 import javafx.scene.shape.Shape;
+import model.Machine;
 
+import javax.xml.transform.Source;
 import java.beans.EventHandler;
+import java.util.Arrays;
 import java.util.Date;
 
 public class NavBar extends HBox {
@@ -53,7 +56,8 @@ public class NavBar extends HBox {
         /*  Play Button  */
         CustomButton playButton = new CustomButton("play.png");
         playButton.setOnMouseClicked(e -> {
-            getParent().getChildrenUnmodifiable();
+
+            System.out.println(Arrays.toString(simulationCanvas.getMachines().toArray()));
         });
 
         /*  Replay Button  */

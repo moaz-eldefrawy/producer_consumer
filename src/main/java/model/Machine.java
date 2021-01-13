@@ -18,6 +18,7 @@ public class Machine implements Runnable{
         this.colour = colour;
     }
 
+
     /**processes current product and forwards it to next queue*/
     private void processProduct(){
         report();
@@ -111,5 +112,12 @@ public class Machine implements Runnable{
         }else{
             return currentProduct.colour;
         }
+    }
+
+    public Queue[] getSources (){
+        return in;
+    }
+    public Queue getDestination (){
+        return out;
     }
 }

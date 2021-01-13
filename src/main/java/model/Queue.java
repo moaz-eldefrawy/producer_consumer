@@ -1,17 +1,19 @@
 package model;
 
+import GUI.DraggableShape;
 import GUI.QueueGUI;
 
+import java.util.ArrayList;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 //import java.util.concurrent.locks.Lock;
 
 
-public class Queue {
+public class Queue{
     private final java.util.Queue<Product> internal;
     private final java.util.Queue<Machine> waitingList;
     //Lock enQLock; On second thoughts, i'll use the built in queues..
-   // Lock deQLock;
+    // Lock deQLock;
     public QueueGUI queueGUI;
 
     public Queue(){
@@ -22,6 +24,7 @@ public class Queue {
         internal = new LinkedBlockingQueue<>();
         waitingList = new ArrayBlockingQueue<>(m);
     }
+
 
     /**
      * adds product to this queue*/
@@ -37,6 +40,7 @@ public class Queue {
                 }
             }
         }
+
         if(!done){
             internal.offer(product);
         }
@@ -65,4 +69,5 @@ public class Queue {
     public int size(){
         return internal.size();
     }
+
 }
