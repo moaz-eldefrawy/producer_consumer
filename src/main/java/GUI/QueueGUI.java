@@ -67,6 +67,10 @@ public class QueueGUI extends Circle implements DraggableShape {
         setStrokeWidth(3);
     }
 
+    public void setText(String text){
+        this.text.setText(text);
+    }
+
     @Override
     public Text getText() {
         return text;

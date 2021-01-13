@@ -2,6 +2,7 @@ package model;
 
 import GUI.MachineGUI;
 import javafx.scene.Node;
+import javafx.scene.paint.Color;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -35,6 +36,7 @@ public class MachineBuilder{
         }
 
         //TODO generate time and color
-        return new Machine(in , destinationQueue, new Random().nextLong(), "color yes");
+        Random r = new Random();
+        return new Machine(in , destinationQueue, r.nextLong(), Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble()));
     }
 }

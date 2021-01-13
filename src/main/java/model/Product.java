@@ -1,8 +1,10 @@
 package model;
 
+import javafx.scene.paint.Color;
+
 public class Product {
-    String colour;
-    public Product(String colour){
+    Color colour;
+    public Product(Color colour){
         this.colour = colour;
     }
 }

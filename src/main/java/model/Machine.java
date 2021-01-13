@@ -1,23 +1,46 @@
 package model;
 
 import GUI.MachineGUI;
+import javafx.scene.paint.Color;
+
+import java.util.concurrent.LinkedBlockingQueue;
 
 public class Machine implements Runnable{
     private final Queue[] in;
     private final Queue out;
-    private final String colour;
+    private final Color colour;
     private final long time;
+    private Thread machineThread;
     private Product currentProduct;
-    private volatile boolean stop = false;
+    private volatile boolean stop;
+    private volatile boolean replay;
+    private long simStart;
     public MachineGUI machineGUI;
+    private java.util.Queue<Memento> log;
 
-    public Machine(Queue[] in, Queue out, long time, String colour) {
+    /**for GUI based simultaion*/
+    public Machine(Queue[] in, Queue out, long time, Color colour, MachineGUI machineGUI) {
+        this(in,out,time,colour);
+        this.machineGUI = machineGUI;
+        machineGUI.setFill(colour);
+    }
+    /**for testing*/
+    public Machine(Queue[] in, Queue out, long time, Color colour) {
         this.in = in;
         this.out = out;
         this.time = time;
         this.colour = colour;
+        machineGUI = new MachineGUI(0,0);
     }
 
+    private static class Memento{
+        Color nextState;
+        long timestamp;
+        Memento(Color nextState, long timestamp){
+            this.nextState = nextState;
+            this.timestamp = timestamp;
+        }
+    }
 
     /**processes current product and forwards it to next queue*/
     private void processProduct(){
@@ -32,12 +55,44 @@ public class Machine implements Runnable{
         report();
     }
 
-    /**reports to main/ mediator any colour change
-     * currently only a stub*/
-    private void report(){//still needs proper synchronization, check with main/monitor
-        System.out.print(Thread.currentThread().getName());
-        System.out.print("'s colour is ");
-        System.out.println(this.getColour());
+    /**reports event to GUI and stores it in log*/
+    private void report(){
+        Color nextState = getColour();
+        machineGUI.setFill(nextState);
+        log.offer(new Memento(nextState,simStart - System.currentTimeMillis()));
+    }
+
+    /**pops events from logs and displays them*/
+    private void replay(){
+        long currentReplayStamp = 0;
+        try {
+            while(!log.isEmpty()){
+                Memento memento = log.remove(); //event: processing next product
+                Thread.sleep(memento.timestamp - currentReplayStamp); //sleep till its time comes
+                currentReplayStamp = memento.timestamp; //ready for pushing event
+
+                for(Queue q : in){ //refresh input queues
+                    q.replay();
+                }
+                machineGUI.setFill(memento.nextState);//change colour
+
+                memento = log.remove(); //event: pushing the product to out
+                Thread.sleep(memento.timestamp - currentReplayStamp);//sleep till its time comes
+                currentReplayStamp = memento.timestamp;//ready for next product
+
+                out.replay();
+                machineGUI.setFill(memento.nextState);
+            }
+        }catch (InterruptedException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void init(){
+        log = new LinkedBlockingQueue<>();
+        stop = false;
+        replay = false;
+        simStart = System.currentTimeMillis();
     }
 
     /**
@@ -69,7 +124,7 @@ public class Machine implements Runnable{
             try {
                 this.wait();
             } catch (InterruptedException e) {
-                if(!stop) //the interrupt was not caused by stop method
+                if(!stop && !replay) //the interrupt was not caused by stop method nor startReplay
                     e.printStackTrace();
                 else
                     return;
@@ -79,16 +134,24 @@ public class Machine implements Runnable{
     }
 
     /**
-     * @param machineThread the thread which runs this machine
      * safe way to stop the machine:
      * stops only if no product is currently being processed*/
-    public synchronized void stop(Thread machineThread){
+    public void stop(){
         this.stop = true;
         machineThread.interrupt();
     }
 
+    /**stops the current simulation and replays it*/
+    public void startReplay(){
+        replay = true;
+        machineThread.interrupt();
+    }
+
+    /**runs a single simulation and can replay it*/
     public void run(){
-        while (!stop){
+        init();
+        machineThread = Thread.currentThread();
+        while (!stop && !replay){
             boolean found = false;
             for (Queue q : in){
                 currentProduct = q.dequeue();
@@ -104,14 +167,22 @@ public class Machine implements Runnable{
             }
         }
 
+        if(stop) return;
+
+        replay();
     }
 
-    public String getColour(){
+    public Color getColour(){
         if(currentProduct == null){
             return this.colour;
         }else{
             return currentProduct.colour;
         }
+    }
+
+    /**for testing*/
+    public String printLog(){
+        return "";
     }
 
     public Queue[] getSources (){
