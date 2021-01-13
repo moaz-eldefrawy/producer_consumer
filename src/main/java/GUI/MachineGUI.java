@@ -5,6 +5,8 @@ import javafx.scene.Cursor;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 
@@ -16,8 +18,11 @@ public class MachineGUI extends Rectangle implements DraggableShape {
         setX(x);
         setY(y);
 
-        text.xProperty().bind(xProperty());
+        text.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 15));
+        text.xProperty().bind(xProperty().add(-35));
         text.yProperty().bind(yProperty());
+
+
 
         setWidth(100);
         setHeight(100);

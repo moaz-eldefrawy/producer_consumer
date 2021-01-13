@@ -9,6 +9,8 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -22,6 +24,7 @@ public class QueueGUI extends Circle implements DraggableShape {
         setCenterY(y);
 
         setRadius(50);
+        text.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 15));
         text.xProperty().bind(centerXProperty());
         text.yProperty().bind(centerYProperty());
         setFill(Color.DARKGOLDENROD);
