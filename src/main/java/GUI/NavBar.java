@@ -20,6 +20,10 @@ import javax.crypto.Mac;
 import javax.xml.transform.Source;
 import java.beans.EventHandler;
 import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashSet;
 
 public class NavBar extends HBox {
     double iconsSize = 50;

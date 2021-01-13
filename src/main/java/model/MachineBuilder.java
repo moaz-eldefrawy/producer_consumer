@@ -31,17 +31,16 @@ public class MachineBuilder{
     }
 
     public Machine getResult(){
-
-
-
         Queue[] in = new Queue[sourceQueues.size()];
         for (int i = 0;i < sourceQueues.size();i++) {
             in[i] = sourceQueues.get(i);
-
-            System.out.println("equals " + in[i].equals(sourceQueues.get(i)));
-            System.out.println("HashCode " + (in[i].hashCode() == sourceQueues.get(i).hashCode()));
         }
 
+        for (int i = 0;i < sourceQueues.size();i++) {
+            System.out.println("equals " + in[i].equals(sourceQueues.get(i)));
+            System.out.println("HashCode " + (in[i].hashCode() == sourceQueues.get(i).hashCode()));
+            System.out.println("Identity " + (in[i] == sourceQueues.get(i)));
+        }
         //TODO generate time and color
         Random r = new Random();
         final int millisecondsPerSecond = 1000;

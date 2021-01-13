@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -12,7 +13,6 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import model.*;
 
-import javax.crypto.Mac;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -168,7 +168,6 @@ public class SimulationCanvas {
         machineInstances = new HashMap<>();
         HashSet<Queue> destQueues = new HashSet<Queue>();
         graph = new Graph();
-
         //create the queue instances from the QueueGui instances
         //create the MachineBuilder instances from the MachineGUI instances
         for (Node node: canvas.getChildren()){
@@ -226,18 +225,19 @@ public class SimulationCanvas {
         }
         System.out.println("Number of Start Queues:" + graph.startQueues.size());
 
+
         // Printing test
-        System.out.println("Queues: ");
+        /*System.out.println("Queues: ");
         for (Queue q : queueInstances.values())
             System.out.println(q.toString());
         System.out.println("Machines: ");
-        for (MachineBuilder machine : machineInstances.values()){
+        for (Machine machine : machines){
             System.out.println(machine.toString());
-            System.out.println("Sources : " + machine.sourceQueues.toString());
-            System.out.println("Destination : " + machine.destinationQueue.toString());
+            System.out.println("Sources : " + machine.getSources().toString());
+            System.out.println("Destination : " + machine.getDestination().toString());
         }
         System.out.println("=---------------------------------=");
-
+*/
         HashSet<Machine> machines = new HashSet<>();
         for (MachineBuilder builder: machineInstances.values()){
             machines.add(builder.getResult());
@@ -247,9 +247,7 @@ public class SimulationCanvas {
         return graph;
     }
 
-    public void resetGraph(){
 
-    }
 
 
 }
