@@ -90,7 +90,7 @@ public class Queue{
     }
 
     /**pops the next event and sends to GUI*/
-    public void replay(){
+    void replay(){
         String nextState = log.remove(); //should never be null, but idk
         queueGUI.setText(nextState);
         log.offer(nextState); //if we need to replay multiple times

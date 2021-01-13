@@ -69,20 +69,20 @@ public class Machine implements Runnable{
         System.out.println(nextState.toString());
         System.out.println(machineGUI);
         machineGUI.setFill(nextState);
-        log.offer(new Memento(nextState,simStart - System.currentTimeMillis()));
+        log.offer(new Memento(nextState,System.currentTimeMillis() - simStart));
     }
 
     /**pops events from logs and displays them*/
     private void replay(){
         long currentReplayStamp = 0, tempTime;
-        int logSize = log.size();
+        int logSize = log.size()/2;
         machineGUI.setFill(colour);
         try {
             for(int i = 0; i < logSize; i++){
                 Memento memento = log.remove(); //event: processing next product
                 tempTime = memento.timestamp - currentReplayStamp;
-                if(tempTime > 0)
-                    Thread.sleep(tempTime); //sleep till its time comes
+                System.out.println("sleep time = " + tempTime);
+                Thread.sleep(tempTime); //sleep till its time comes
                 currentReplayStamp = memento.timestamp; //ready for pushing event
                 log.offer(memento); //if we need to replay again
 
@@ -93,8 +93,7 @@ public class Machine implements Runnable{
 
                 memento = log.remove(); //event: pushing the product to out
                 tempTime = memento.timestamp - currentReplayStamp;
-                if(tempTime > 0)
-                    Thread.sleep(tempTime);//sleep till its time comes
+                Thread.sleep(tempTime);//sleep till its time comes
                 currentReplayStamp = memento.timestamp;//ready for next product
                 log.offer(memento); //if we need to replay again
 
