@@ -55,6 +55,9 @@ public class GetMachinesTest {
         for (int i = 0;i < machines.get(0).getSources().length;i++){
             assertTrue(machines.get(0).getSources()[i].equals(
                     machines.get(1).getSources()[i]));
+
+            assertTrue(machines.get(0).getSources()[i] ==
+                                machines.get(1).getSources()[i]);
         }
 
 
@@ -69,10 +72,13 @@ public class GetMachinesTest {
 
         machines.get(0).getSources()[0].internal.add(pr);
         assertTrue(machines.get(1).getSources()[0].internal.contains(pr));
+
+        machines.get(1).getSources()[0].internal.remove();
+        assertTrue(machines.get(0).getSources()[0].internal.isEmpty());
     }
 
     public ArrayList<Machine> getMachines(Pane canvas){
-        HashMap<DraggableShape, model.Queue> queueInstances = new HashMap<>();
+        HashMap<DraggableShape, Queue> queueInstances = new HashMap<>();
         HashMap<DraggableShape, MachineBuilder> machineInstances = new HashMap<>();
 
         //create the queue instances from the QueueGui instances
@@ -81,7 +87,7 @@ public class GetMachinesTest {
             //System.out.println("Class = " + node.getClass());
             if (node.getClass() == QueueGUI.class) {
                 //System.out.println("it is a queue!");
-                queueInstances.put((DraggableShape) node, new model.Queue());
+                queueInstances.put((DraggableShape) node, new Queue());
             }
             else if (node.getClass() == MachineGUI.class) {
                 //System.out.println("it is a Machine!");
@@ -91,7 +97,7 @@ public class GetMachinesTest {
 
 
         for (Node node: canvas.getChildren()){
-            if (!(node.getClass() == Arrow.class))
+            if (node.getClass() != Arrow.class)
                 continue;
             Arrow arrow = (Arrow) node;
             //System.out.println("Arrow contecting from " + arrow.source.hashCode() + ", to " + arrow.destination.hashCode());
@@ -105,22 +111,24 @@ public class GetMachinesTest {
                 machineInstances.get(arrow.destination).addSource(queueInstances.get(arrow.source));
         }
 
-        // Printing test
-        System.out.println("Queues: ");
-        for (Queue q : queueInstances.values())
-            System.out.println(q.toString());
-        System.out.println("Machines: ");
-        for (MachineBuilder machine : machineInstances.values()){
-            System.out.println(machine.toString());
-            System.out.println("Sources : " + machine.sourceQueues.toString());
-            System.out.println("Destination : " + machine.destinationQueue.toString());
-        }
-        System.out.println("=---------------------------------=");
+
 
         ArrayList<Machine> machines = new ArrayList<>();
         for (MachineBuilder builder: machineInstances.values()){
             machines.add(builder.getResult());
         }
+
+        // Printing test
+        System.out.println("Queues: ");
+        for (Queue q : queueInstances.values())
+            System.out.println(q.toString());
+        System.out.println("Machines: ");
+        for (Machine machine : machines){
+            System.out.println(machine.toString());
+            System.out.println("Sources : " + machine.getSources().toString());
+            System.out.println("Destination : " + machine.getDestination().toString());
+        }
+        System.out.println("=---------------------------------=");
 
 
 
