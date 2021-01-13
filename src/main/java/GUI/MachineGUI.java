@@ -71,4 +71,5 @@ public class MachineGUI extends Rectangle implements DraggableShape {
     public Text getText() {
         return text;
     }
+
 }

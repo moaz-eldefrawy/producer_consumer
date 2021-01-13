@@ -20,9 +20,12 @@ public class Machine implements Runnable{
 
     /**for GUI based simultaion*/
     public Machine(Queue[] in, Queue out, long time, Color colour, MachineGUI machineGUI) {
-        this(in,out,time,colour);
+        this.in = in;
+        this.out = out;
+        this.time = time;
+        this.colour = colour;
         this.machineGUI = machineGUI;
-        machineGUI.setFill(colour);
+        init();
     }
     /**for testing*/
     public Machine(Queue[] in, Queue out, long time, Color colour) {
@@ -77,6 +80,10 @@ public class Machine implements Runnable{
         long currentReplayStamp = 0, tempTime;
         int logSize = log.size()/2;
         machineGUI.setFill(colour);
+        out.resetForReplay();
+        for (Queue q: in){
+            q.resetForReplay();
+        }
         try {
             for(int i = 0; i < logSize; i++){
                 Memento memento = log.remove(); //event: processing next product
@@ -177,6 +184,10 @@ public class Machine implements Runnable{
     }
     public Queue getDestination (){
         return out;
+    }
+
+    public Thread getThread(){
+        return machineThread;
     }
 
     /*control methods*/

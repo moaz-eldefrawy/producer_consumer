@@ -47,8 +47,7 @@ public class MachineBuilder{
         final int machineProcessingTime  = (r.nextInt(4)+1) * millisecondsPerSecond;
 
         Machine m = new Machine(in , destinationQueue, machineProcessingTime
-                , Color.color(0,0.5,0));
-        m.machineGUI = this.machineGUI;
+                , Color.GREEN, machineGUI);
         return m;
     }
 }

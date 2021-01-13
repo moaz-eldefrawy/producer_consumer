@@ -14,8 +14,7 @@ public class Queue{
     private final java.util.Queue<Product> internal = new LinkedBlockingQueue<>();
     private final java.util.Queue<Machine> waitingList;
     private final java.util.Queue<String> log = new LinkedBlockingQueue<>();
-    //Lock enQLock; On second thoughts, i'll use the built in queues..
-    // Lock deQLock;
+    private int originalProducts = 0;
     public QueueGUI queueGUI;
 
     public Queue(){
@@ -32,6 +31,7 @@ public class Queue{
         log.clear();
     }
     /**
+     * USED DURING SIMULATION. To set initial products for source Queues, use setProducts
      * adds product to this queue*/
     public synchronized void enqueue(Product product){
         boolean done = false;
@@ -52,7 +52,8 @@ public class Queue{
         report();
     }
 
-    /**pulls product from queue*/
+    /**USED DURING SIMULATION ONLY
+     * pulls product from queue*/
     public Product dequeue(){
         Product ans = internal.poll();
         report();
@@ -96,6 +97,11 @@ public class Queue{
         log.offer(nextState); //if we need to replay multiple times
     }
 
+    void resetForReplay(){
+        System.out.println("Queue initial products" + Integer.toString(originalProducts));
+        queueGUI.setText(Integer.toString(originalProducts));
+    }
+
     public String printLog( String name ){
         String[] temp = log.toArray(String[]::new);
         StringBuilder sb = new StringBuilder(name);
@@ -109,6 +115,13 @@ public class Queue{
 
     public void setQueueGUI(QueueGUI queueGUI) {
         this.queueGUI = queueGUI;
-        report();
+        updateText();
+    }
+
+    public void setProducts(Product[] products){
+        for(Product p : products){
+            internal.offer(p);
+        }
+        originalProducts = products.length;
     }
 }

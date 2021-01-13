@@ -101,6 +101,7 @@ public class NavBar extends HBox {
         rePlayButton.setOnMouseClicked(e -> {
             System.out.println("Replay Clicked");
             for(Machine machine: machines){
+                machine.stop();
                 machine.startReplay();
             }
         });
