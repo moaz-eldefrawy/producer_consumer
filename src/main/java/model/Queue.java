@@ -20,7 +20,6 @@ public class Queue{
 
     public Queue(){
         waitingList = new LinkedBlockingQueue<>();
-        queueGUI = new QueueGUI(0,0); //TODO how in blazes is this supposed to be set?
     }
     public Queue(int m){
         waitingList = new ArrayBlockingQueue<>(m);
@@ -29,6 +28,7 @@ public class Queue{
 
     public synchronized void clear(){
         internal.clear();
+        waitingList.clear();
         log.clear();
         queueGUI.setText("0");
     }

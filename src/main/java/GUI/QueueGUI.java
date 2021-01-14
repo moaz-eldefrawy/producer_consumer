@@ -78,7 +78,7 @@ public class QueueGUI extends Circle implements DraggableShape {
         Runnable updater = new Runnable() {
             @Override
             public void run() {
-            //    System.out.println("QueueGUI::setText" + text);;
+                System.out.println("QueueGUI::setText" + text);;
                 text.setText(newtext);
             }
         };

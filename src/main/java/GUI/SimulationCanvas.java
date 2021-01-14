@@ -266,7 +266,7 @@ public class SimulationCanvas {
     }
 
     void fillQueueWtihProducts(Queue value){
-        int numOfProducts = new Random().nextInt(3)+1;
+        int numOfProducts = new Random().nextInt(5)+1;
         //System.out.println(numOfProducts);
         Product[] products = new Product[numOfProducts];
         for(int i = 0; i < numOfProducts; i++) {

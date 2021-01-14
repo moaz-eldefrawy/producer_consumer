@@ -169,7 +169,7 @@ public class Machine implements Runnable{
                 this.wait();
             } catch (InterruptedException e) {
                 if(restart)
-                    return;
+                    return ;
                 if(!stop && !replay) //the interrupt was not caused by stop method nor startReplay
                     System.out.println("thread wakeup");
                 else
@@ -231,10 +231,14 @@ public class Machine implements Runnable{
 
     /**restarts the simulation from scratch with the same machines and queues*/
     public void restart(){
-        init();
         restart = true;
         machineThread.interrupt();
-
+        try {
+            machineThread.sleep(1000);
+        } catch (InterruptedException e) {
+            System.out.println("thread can't wakeup");
+            e.printStackTrace();
+        }
     }
 
     /**runs a single simulation and can replay it*/
