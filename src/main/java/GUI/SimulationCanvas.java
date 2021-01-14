@@ -14,11 +14,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import model.*;
+import model.Queue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 
 
 public class SimulationCanvas {
@@ -259,11 +257,11 @@ public class SimulationCanvas {
 
     public Graph replaySimulation(){
         graph.emptyQueues();
-        graph.resetMachines();
         for(Queue q: graph.startQueues){
-            fillQueueWtihProducts(q);
+            ArrayList<Product> products = graph.initProducts.get(q);
+            q.setProducts(products.toArray(new Product[products.size()]));
         }
-        // assumtion same timer
+        graph.resetMachines();
         return graph;
     }
 
@@ -277,6 +275,9 @@ public class SimulationCanvas {
             products[i] = new Product(Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble()));
         }
         value.setProducts(products);
+        ArrayList<Product> listProducts = new ArrayList<Product>();
+        Collections.addAll(listProducts, products);
+        graph.initProducts.put(value, listProducts);
     }
 
 

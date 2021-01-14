@@ -11,11 +11,12 @@ import java.util.concurrent.LinkedBlockingQueue;
 
 
 public class Queue{
-    private final java.util.Queue<Product> internal = new LinkedBlockingQueue<>();
+    public final java.util.Queue<Product> internal = new LinkedBlockingQueue<>();
     private final java.util.Queue<Machine> waitingList;
-    private final java.util.Queue<String> log = new LinkedBlockingQueue<>();
+    public final java.util.Queue<String> log = new LinkedBlockingQueue<>();
     public int originalProducts = 0;
     public QueueGUI queueGUI;
+
 
     public Queue(){
         waitingList = new LinkedBlockingQueue<>();
@@ -29,6 +30,7 @@ public class Queue{
     public synchronized void clear(){
         internal.clear();
         log.clear();
+        queueGUI.setText("0");
     }
     /**
      * USED DURING SIMULATION. To set initial products for source Queues, use setProducts
@@ -58,6 +60,7 @@ public class Queue{
         Product ans = internal.poll();
         if(ans != null) //don't report a zero when the last value was already a zero!
             report();
+
         return ans;
     }
 
@@ -124,6 +127,8 @@ public class Queue{
         for(Product p : products){
             internal.offer(p);
         }
+        System.out.println(internal.size());
         originalProducts = products.length;
+        report();
     }
 }
