@@ -269,8 +269,11 @@ public class Machine implements Runnable{
                 try {
                     wait();
                 } catch (InterruptedException e) {
-                    if(!stop && !replay)
+                    if(!stop && !replay){
+                        init();
                         run();
+                    }
+
                 }
             }
         }

@@ -1,7 +1,9 @@
 package GUI;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.concurrent.Task;
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -279,7 +281,5 @@ public class SimulationCanvas {
         Collections.addAll(listProducts, products);
         graph.initProducts.put(value, listProducts);
     }
-
-
 
 }
