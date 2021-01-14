@@ -258,18 +258,25 @@ public class SimulationCanvas {
     }
 
     public Graph replaySimulation(){
-        graph.emptyQueues();
+        /*deterministic*/
+        Machine[] machines = graph.machines.toArray(Machine[]::new);
+        for(Machine m : machines){
+            m.startReplay();
+        }
+        return graph;
+
+        /*non-deterministic code*/
+        /*graph.emptyQueues();
         for(Queue q: graph.startQueues){
             ArrayList<Product> products = graph.initProducts.get(q);
             q.setProducts(products.toArray(new Product[products.size()]));
         }
         graph.resetMachines();
-        return graph;
+        return graph;*/
     }
 
     void fillQueueWtihProducts(Queue value){
-        int numOfProducts = new Random().nextInt(5)+1;
-        //System.out.println(numOfProducts);
+        int numOfProducts = new Random().nextInt(3)+1;
         Product[] products = new Product[numOfProducts];
         for(int i = 0; i < numOfProducts; i++) {
             //Color

@@ -51,21 +51,21 @@ public class Queue{
         if(!done){
             internal.offer(product);
         }
-        report();
+        //report();
     }
 
     /**USED DURING SIMULATION ONLY
      * pulls product from queue*/
     public Product dequeue(){
         Product ans = internal.poll();
-        if(ans != null) //don't report a zero when the last value was already a zero!
-            report();
+        //if(ans != null) //don't report a zero when the last value was already a zero!
+        //report();
 
         return ans;
     }
 
     /**reports to GUI and updates log*/
-    private void report(){
+    void report(){
         System.out.println("Queue report ..");
         String nextState = Integer.toString(internal.size());
         queueGUI.setText(nextState);
@@ -103,7 +103,6 @@ public class Queue{
     }
 
     void resetForReplay(){
-        System.out.println("Queue initial products" + Integer.toString(originalProducts));
         queueGUI.setText(Integer.toString(originalProducts));
     }
 
@@ -129,6 +128,6 @@ public class Queue{
         }
         System.out.println(internal.size());
         originalProducts = products.length;
-        report();
+        updateText();
     }
 }

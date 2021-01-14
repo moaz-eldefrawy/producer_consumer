@@ -3,7 +3,7 @@ package model;
 import GUI.MachineGUI;
 import javafx.scene.paint.Color;
 
-import java.util.HashMap;
+
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Machine implements Runnable{
@@ -55,9 +55,10 @@ public class Machine implements Runnable{
         try{
             Thread.sleep(time);
         }catch (InterruptedException e){
-            if(this.stop == true)
+            if(stop)
                 return;
-            e.printStackTrace();
+            if(!replay)
+                e.printStackTrace();
         }
         System.out.println("processProduct::enqueuing ..");
         out.enqueue(currentProduct);
@@ -79,12 +80,13 @@ public class Machine implements Runnable{
 
     /**reports event to GUI and stores it in log*/
     private void report(){
-        System.out.println("reporting ..");
         Color nextState = getColour();
-        System.out.println("report::filling color .. " + nextState.toString() );
         machineGUI.setFill(nextState);
-        System.out.println("report::color filled ..");
         log.offer(new Memento(nextState,System.currentTimeMillis() - simStart));
+        for(Queue q : in){
+            q.report();
+        }
+        out.report();
     }
 
     /**pops events from logs and displays them*/
@@ -93,10 +95,9 @@ public class Machine implements Runnable{
         int logSize = log.size()/2;
         machineGUI.setFill(colour);
         out.resetForReplay();
-        System.out.println(out.printLog("out"));
         for (Queue q: in){
             q.resetForReplay();
-            System.out.println(q.printLog("q_in"));
+            System.out.println(q.printLog(machineThread.getName() + " q_in"));
         }
         try {
 
@@ -109,10 +110,9 @@ public class Machine implements Runnable{
                 log.offer(memento); //if we need to replay again
 
                 for(Queue q : in){ //refresh input queues
-                    if(q.queueGUI.getText().toString().equals("0") == false) {
-                        q.replay();
-                    }
+                    q.replay();
                 }
+                out.replay();
                 machineGUI.setFill(memento.nextState);//change colour
 
                 memento = log.remove(); //event: pushing the product to out
@@ -122,6 +122,9 @@ public class Machine implements Runnable{
                 log.offer(memento); //if we need to replay again
 
                 out.replay();
+                for(Queue q : in){
+                    q.replay();
+                }
                 flicker();
                 machineGUI.setFill(memento.nextState);
             }
@@ -248,7 +251,6 @@ public class Machine implements Runnable{
             boolean found = false;
             for (Queue q : in){
                 currentProduct = q.dequeue();
-                System.out.println("Dequeued here");
                 if(currentProduct != null){
                     found = true;
                     break;
