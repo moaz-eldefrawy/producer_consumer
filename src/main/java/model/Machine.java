@@ -62,6 +62,7 @@ public class Machine implements Runnable{
         flicker();
         currentProduct = null;
         report();
+        System.out.println("preProcessing ended ..");
     }
 
     /**Flickers and stores it in log*/

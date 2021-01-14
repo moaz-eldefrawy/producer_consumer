@@ -1,10 +1,12 @@
 package GUI;
 
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -34,6 +36,7 @@ public class SimulationCanvas {
 
 
     private void initCanvasMenu() {
+
         canvasMenu = new ContextMenu();
         relativeContextMenuCoord = new double[2];
         MenuItem addMachineMenuItem = new MenuItem("Add Machine");
@@ -44,7 +47,6 @@ public class SimulationCanvas {
         addMachineMenuItem.setOnAction(e -> {
             MachineGUI m = new MachineGUI(relativeContextMenuCoord[0], relativeContextMenuCoord[1]);
             addDraggableShapeToCanvas(m);
-            canvas.getChildren().add(m.text);
         });
 
 
@@ -101,6 +103,8 @@ public class SimulationCanvas {
     @FXML
     public void initialize() {
         navbar.simulationCanvas = this;
+
+
     }
 
 
@@ -253,7 +257,7 @@ public class SimulationCanvas {
         return graph;
     }
 
-    public Graph resetSimulation(){
+    public Graph replaySimulation(){
         graph.emptyQueues();
         graph.resetMachines();
         for(Queue q: graph.startQueues){

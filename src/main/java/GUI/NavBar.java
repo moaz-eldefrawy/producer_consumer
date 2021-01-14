@@ -43,7 +43,6 @@ public class NavBar extends HBox {
         addMachineBtn.setOnMousePressed(e -> {
             MachineGUI m = new MachineGUI(e.getSceneX(), e.getSceneY());
             simulationCanvas.addDraggableShapeToCanvas(m);
-            simulationCanvas.canvas.getChildren().add(m.text);
             curr = m;
         });
 
@@ -66,32 +65,23 @@ public class NavBar extends HBox {
         /*  Play Button  */
         CustomButton playButton = new CustomButton("play.png");
         playButton.setOnMouseClicked(e -> {
-
-            int count = Thread.activeCount();
-            System.out.println("currently active threads = " + count);
-
             Graph graph = simulationCanvas.getMachines();
-            for(Machine machine: machines){
-                machine.stop();
-            }
-            machines = graph.machines;
-            Iterator<Machine> machine = machines.iterator();
-            while(machine.hasNext())
-            {
-                Machine currMachine = machine.next();
-                new Thread(currMachine).start();
-            }
+            playGraph(graph);
+
             //System.out.println(Arrays.toString(simulationCanvas.getMachines().toArray()));
         });
 
         /*  Replay Button  */
         CustomButton rePlayButton = new CustomButton("replay.png");
         rePlayButton.setOnMouseClicked(e -> {
-            System.out.println("Replay Clicked");
+
+            Graph graph = simulationCanvas.replaySimulation();
+            playGraph(graph);
+            /*System.out.println("Replay Clicked");
             for(Machine machine: machines){
                 machine.stop();
                 machine.startReplay();
-            }
+            }*/
         });
 
         /*  Composing the HBox   */
@@ -101,6 +91,21 @@ public class NavBar extends HBox {
 
     }
 
+    void playGraph(Graph graph){
+        int count = Thread.activeCount();
+        System.out.println("currently active threads = " + count);
+
+        for(Machine machine: machines){
+            machine.stop();
+        }
+        machines = graph.machines;
+        Iterator<Machine> machine = machines.iterator();
+        while(machine.hasNext())
+        {
+            Machine currMachine = machine.next();
+            new Thread(currMachine).start();
+        }
+    }
 
 
     Paint gradient(){

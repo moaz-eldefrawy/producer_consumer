@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,8 +18,7 @@ import java.util.ArrayList;
 
 public class QueueGUI extends Circle implements DraggableShape {
     public Text text = new Text("0");
-    @FXML
-    Pane canvas;
+
     public QueueGUI(double x, double y) {
         setCenterX(x);
         setCenterY(y);
@@ -27,6 +27,7 @@ public class QueueGUI extends Circle implements DraggableShape {
         text.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 15));
         text.xProperty().bind(centerXProperty());
         text.yProperty().bind(centerYProperty());
+
         setFill(Color.DARKGOLDENROD);
 
         setOnDragDetected(mouseEvent -> {
@@ -73,13 +74,24 @@ public class QueueGUI extends Circle implements DraggableShape {
         setStrokeWidth(3);
     }
 
-    public synchronized void setText(String text){
-        this.text.setText(text);
+    public void setText(String newtext){
+        Runnable updater = new Runnable() {
+            @Override
+            public void run() {
+                System.out.println("QueueGUI::setText" + text);;
+                text.setText(newtext);
+            }
+        };
+
+
+        Platform.runLater(updater);
+
+
     }
 
 
     @Override
     public synchronized Text getText() {
-        return text;
+        return this.text;
     }
 }
