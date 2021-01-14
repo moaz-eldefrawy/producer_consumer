@@ -47,33 +47,33 @@ public class MachineGUI extends Rectangle implements DraggableShape {
     }
 
     @Override
-    public DoubleProperty getXProperty() {
+    public synchronized DoubleProperty getXProperty() {
         return xProperty();
     }
 
     @Override
-    public void setXProperty(double x) {
+    public synchronized void setXProperty(double x) {
         setX(x - 50);
     }
 
     @Override
-    public DoubleProperty getYProperty() {
+    public synchronized DoubleProperty getYProperty() {
         return yProperty();
     }
 
     @Override
-    public void setYProperty(double y) {
+    public synchronized void setYProperty(double y) {
         setY(y - 50);
     }
 
     @Override
-    public void setShapeStroke(Paint paint) {
+    public synchronized void setShapeStroke(Paint paint) {
         setStroke(paint);
         setStrokeWidth(3);
     }
 
     @Override
-    public Text getText() {
+    public synchronized Text getText() {
         return text;
     }
 

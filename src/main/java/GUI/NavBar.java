@@ -30,9 +30,7 @@ public class NavBar extends HBox {
     public SimulationCanvas simulationCanvas;
     DraggableShape curr;
 
-    ArrayList<Thread> machineThreads = new ArrayList<>();
-    HashSet<Machine> machines;
-
+    HashSet<Machine> machines = new HashSet<>();
 
     public NavBar(){
         super();
@@ -71,28 +69,18 @@ public class NavBar extends HBox {
 
             int count = Thread.activeCount();
             System.out.println("currently active threads = " + count);
-            Graph graph;
-            if(machineThreads.size() == 0)// first simulation
-                 graph = simulationCanvas.getMachines();
-            else { // assumption simulation has ended
-                graph = simulationCanvas.resetSimulation();
-                return;
-                //machineThreads.clear();
 
+            Graph graph = simulationCanvas.getMachines();
+            for(Machine machine: machines){
+                machine.stop();
             }
             machines = graph.machines;
-
             Iterator<Machine> machine = machines.iterator();
             while(machine.hasNext())
             {
                 Machine currMachine = machine.next();
-                Thread currThread = new Thread(currMachine);
-                currThread.start();
-                machineThreads.add( currThread );
-                /** get first node **/
-
+                new Thread(currMachine).start();
             }
-
             //System.out.println(Arrays.toString(simulationCanvas.getMachines().toArray()));
         });
 

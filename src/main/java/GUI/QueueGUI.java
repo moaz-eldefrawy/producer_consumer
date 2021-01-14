@@ -48,39 +48,38 @@ public class QueueGUI extends Circle implements DraggableShape {
 
 
     @Override
-    public DoubleProperty getXProperty() {
+    public synchronized DoubleProperty getXProperty() {
         return centerXProperty();
     }
 
     @Override
-    public void setXProperty(double x) {
+    public synchronized void setXProperty(double x) {
         setCenterX(x);
     }
 
     @Override
-    public DoubleProperty getYProperty() {
+    public synchronized DoubleProperty getYProperty() {
         return centerYProperty();
     }
 
     @Override
-    public void setYProperty(double y) {
+    public synchronized void setYProperty(double y) {
         setCenterY(y);
     }
 
     @Override
-    public void setShapeStroke(Paint paint) {
+    public synchronized void setShapeStroke(Paint paint) {
         setStroke(paint);
         setStrokeWidth(3);
     }
 
-    public void setText(String text){
+    public synchronized void setText(String text){
         this.text.setText(text);
-       // SimulationCanvas.canvas.getChildren().add( getText() );
     }
 
 
     @Override
-    public Text getText() {
+    public synchronized Text getText() {
         return text;
     }
 }

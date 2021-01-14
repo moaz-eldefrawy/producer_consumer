@@ -48,12 +48,16 @@ public class Machine implements Runnable{
 
     /**processes current product and forwards it to next queue*/
     private void processProduct(){
+        System.out.println("processing product..");
         report();
         try{
             Thread.sleep(time);
         }catch (InterruptedException e){
+            if(this.stop == true)
+                return;
             e.printStackTrace();
         }
+        System.out.println("processProduct::enqueuing ..");
         out.enqueue(currentProduct);
         flicker();
         currentProduct = null;
@@ -72,8 +76,11 @@ public class Machine implements Runnable{
 
     /**reports event to GUI and stores it in log*/
     private void report(){
+        System.out.println("reporting ..");
         Color nextState = getColour();
+        System.out.println("report::filling color .. " + nextState.toString() );
         machineGUI.setFill(nextState);
+        System.out.println("report::color filled ..");
         log.offer(new Memento(nextState,System.currentTimeMillis() - simStart));
     }
 
@@ -143,6 +150,7 @@ public class Machine implements Runnable{
     /**
      * registers this machine to all the input queues it is connected to*/
     public synchronized void register(){
+        System.out.println("Machine::registering ..");
         for(Queue q : in){
             if(!q.registerMachine(this)){ //if this queue got a product in the meantime
                 putProduct(q.dequeue()); //accept it

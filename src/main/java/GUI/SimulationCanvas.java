@@ -170,6 +170,7 @@ public class SimulationCanvas {
         graph = new Graph();
         //create the queue instances from the QueueGui instances
         //create the MachineBuilder instances from the MachineGUI instances
+        System.out.println("getting Queues and Machines");
         for (Node node: canvas.getChildren()){
             //System.out.println("Class = " + node.getClass());
             if (node.getClass() == QueueGUI.class) {
@@ -187,17 +188,28 @@ public class SimulationCanvas {
             }
         }
 
+        System.out.println("getting Connections");
         for (Arrow arrow: allConnections){
             //System.out.println("Arrow contecting from " + arrow.source.hashCode() + ", to " + arrow.destination.hashCode());
             //The source is a machine
+            if(arrow == null) {
+                System.out.println("dummy arrow");
+                continue;
+            }
+            if(arrow.source == null || arrow.destination == null){
+                System.out.println("Dummy arrow");
+                continue;
+            }
             if (arrow.source.getClass() == MachineGUI.class) {
                 //Get the MachineBuilder instance from the machines HashMap
                 //Set the destination to be the Queue instance from the HashMap
                 machineInstances.get(arrow.source).setDestination(queueInstances.get(arrow.destination));
                 destQueues.add( queueInstances.get(arrow.destination) );
             }
-            else {
+            else if(arrow.source.getClass() == QueueGUI.class) {
                 machineInstances.get(arrow.destination).addSource(queueInstances.get(arrow.source));
+            } else {
+                System.out.println("Dummy Arrow");
             }
         }
 
@@ -205,7 +217,7 @@ public class SimulationCanvas {
         for(Queue q: destQueues){
             System.out.println(q);
         }*/
-
+        System.out.println("init start queues");
         /**  get starting queues and fill with random num of products **/
         for (HashMap.Entry mapElement : queueInstances.entrySet()) {
             Queue value = (Queue) mapElement.getValue();

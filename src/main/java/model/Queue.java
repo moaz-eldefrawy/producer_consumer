@@ -63,6 +63,7 @@ public class Queue{
 
     /**reports to GUI and updates log*/
     private void report(){
+        System.out.println("Queue report ..");
         String nextState = Integer.toString(internal.size());
         queueGUI.setText(nextState);
         log.offer(nextState);

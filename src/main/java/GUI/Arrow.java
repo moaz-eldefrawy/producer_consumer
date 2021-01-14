@@ -47,7 +47,7 @@ public class Arrow extends Group {
 
 
 
-    private void updatePoints() {
+    private synchronized void updatePoints() {
         double theta = Math.atan2(y2.get() - y1.get(), x2.get() - x1.get());
         double x2Offset = x2.get()-Math.cos(theta)*80;
         double y2Offset = y2.get()-Math.sin(theta)*80;
