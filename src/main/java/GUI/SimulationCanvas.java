@@ -2,11 +2,13 @@ package GUI;
 
 import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.concurrent.Task;
+
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressBar;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
@@ -14,11 +16,9 @@ import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Shape;
 import model.*;
+import model.Queue;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Random;
+import java.util.*;
 
 
 public class SimulationCanvas {
@@ -36,6 +36,7 @@ public class SimulationCanvas {
 
 
     private void initCanvasMenu() {
+
         canvasMenu = new ContextMenu();
         relativeContextMenuCoord = new double[2];
         MenuItem addMachineMenuItem = new MenuItem("Add Machine");
@@ -46,7 +47,6 @@ public class SimulationCanvas {
         addMachineMenuItem.setOnAction(e -> {
             MachineGUI m = new MachineGUI(relativeContextMenuCoord[0], relativeContextMenuCoord[1]);
             addDraggableShapeToCanvas(m);
-            canvas.getChildren().add(m.text);
         });
 
 
@@ -103,6 +103,8 @@ public class SimulationCanvas {
     @FXML
     public void initialize() {
         navbar.simulationCanvas = this;
+
+
     }
 
 
@@ -172,6 +174,7 @@ public class SimulationCanvas {
         graph = new Graph();
         //create the queue instances from the QueueGui instances
         //create the MachineBuilder instances from the MachineGUI instances
+        System.out.println("getting Queues and Machines");
         for (Node node: canvas.getChildren()){
             //System.out.println("Class = " + node.getClass());
             if (node.getClass() == QueueGUI.class) {
@@ -189,17 +192,28 @@ public class SimulationCanvas {
             }
         }
 
+        System.out.println("getting Connections");
         for (Arrow arrow: allConnections){
             //System.out.println("Arrow contecting from " + arrow.source.hashCode() + ", to " + arrow.destination.hashCode());
             //The source is a machine
+            if(arrow == null) {
+                System.out.println("dummy arrow");
+                continue;
+            }
+            if(arrow.source == null || arrow.destination == null){
+                System.out.println("Dummy arrow");
+                continue;
+            }
             if (arrow.source.getClass() == MachineGUI.class) {
                 //Get the MachineBuilder instance from the machines HashMap
                 //Set the destination to be the Queue instance from the HashMap
                 machineInstances.get(arrow.source).setDestination(queueInstances.get(arrow.destination));
                 destQueues.add( queueInstances.get(arrow.destination) );
             }
-            else {
+            else if(arrow.source.getClass() == QueueGUI.class) {
                 machineInstances.get(arrow.destination).addSource(queueInstances.get(arrow.source));
+            } else {
+                System.out.println("Dummy Arrow");
             }
         }
 
@@ -207,7 +221,7 @@ public class SimulationCanvas {
         for(Queue q: destQueues){
             System.out.println(q);
         }*/
-
+        System.out.println("init start queues");
         /**  get starting queues and fill with random num of products **/
         for (HashMap.Entry mapElement : queueInstances.entrySet()) {
             Queue value = (Queue) mapElement.getValue();
@@ -243,18 +257,18 @@ public class SimulationCanvas {
         return graph;
     }
 
-    public Graph resetSimulation(){
+    public Graph replaySimulation(){
         graph.emptyQueues();
-        graph.resetMachines();
         for(Queue q: graph.startQueues){
-            fillQueueWtihProducts(q);
+            ArrayList<Product> products = graph.initProducts.get(q);
+            q.setProducts(products.toArray(new Product[products.size()]));
         }
-        // assumtion same timer
+        graph.resetMachines();
         return graph;
     }
 
     void fillQueueWtihProducts(Queue value){
-        int numOfProducts = new Random().nextInt(10)+1;
+        int numOfProducts = new Random().nextInt(3)+1;
         //System.out.println(numOfProducts);
         Product[] products = new Product[numOfProducts];
         for(int i = 0; i < numOfProducts; i++) {
@@ -263,6 +277,9 @@ public class SimulationCanvas {
             products[i] = new Product(Color.color(r.nextDouble(),r.nextDouble(),r.nextDouble()));
         }
         value.setProducts(products);
+        ArrayList<Product> listProducts = new ArrayList<Product>();
+        Collections.addAll(listProducts, products);
+        graph.initProducts.put(value, listProducts);
     }
 
 }

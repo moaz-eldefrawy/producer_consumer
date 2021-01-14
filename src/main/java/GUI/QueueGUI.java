@@ -1,5 +1,6 @@
 package GUI;
 
+import javafx.application.Platform;
 import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -17,8 +18,7 @@ import java.util.ArrayList;
 
 public class QueueGUI extends Circle implements DraggableShape {
     public Text text = new Text("0");
-    @FXML
-    Pane canvas;
+
     public QueueGUI(double x, double y) {
         setCenterX(x);
         setCenterY(y);
@@ -27,6 +27,7 @@ public class QueueGUI extends Circle implements DraggableShape {
         text.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 15));
         text.xProperty().bind(centerXProperty());
         text.yProperty().bind(centerYProperty());
+
         setFill(Color.DARKGOLDENROD);
 
         setOnDragDetected(mouseEvent -> {
@@ -48,39 +49,49 @@ public class QueueGUI extends Circle implements DraggableShape {
 
 
     @Override
-    public DoubleProperty getXProperty() {
+    public synchronized DoubleProperty getXProperty() {
         return centerXProperty();
     }
 
     @Override
-    public void setXProperty(double x) {
+    public synchronized void setXProperty(double x) {
         setCenterX(x);
     }
 
     @Override
-    public DoubleProperty getYProperty() {
+    public synchronized DoubleProperty getYProperty() {
         return centerYProperty();
     }
 
     @Override
-    public void setYProperty(double y) {
+    public synchronized void setYProperty(double y) {
         setCenterY(y);
     }
 
     @Override
-    public void setShapeStroke(Paint paint) {
+    public synchronized void setShapeStroke(Paint paint) {
         setStroke(paint);
         setStrokeWidth(3);
     }
 
-    public void setText(String text){
-        this.text.setText(text);
-       // SimulationCanvas.canvas.getChildren().add( getText() );
+    public void setText(String newtext){
+        Runnable updater = new Runnable() {
+            @Override
+            public void run() {
+            //    System.out.println("QueueGUI::setText" + text);;
+                text.setText(newtext);
+            }
+        };
+
+
+        Platform.runLater(updater);
+
+
     }
 
 
     @Override
-    public Text getText() {
-        return text;
+    public synchronized Text getText() {
+        return this.text;
     }
 }

@@ -12,17 +12,11 @@ import javafx.scene.text.Text;
 
 public class MachineGUI extends Rectangle implements DraggableShape {
 
-    Text text = new Text("Machine");
+
     Color color;
     public MachineGUI(double x, double y) {
         setX(x);
         setY(y);
-
-        text.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 15));
-        text.xProperty().bind(xProperty().add(-35));
-        text.yProperty().bind(yProperty());
-
-
 
         setWidth(100);
         setHeight(100);
@@ -32,7 +26,6 @@ public class MachineGUI extends Rectangle implements DraggableShape {
 
         setOnDragDetected(mouseEvent -> {
             toFront();
-            text.toFront();
         });
 
 
@@ -47,34 +40,34 @@ public class MachineGUI extends Rectangle implements DraggableShape {
     }
 
     @Override
-    public DoubleProperty getXProperty() {
+    public synchronized DoubleProperty getXProperty() {
         return xProperty();
     }
 
     @Override
-    public void setXProperty(double x) {
+    public synchronized void setXProperty(double x) {
         setX(x - 50);
     }
 
     @Override
-    public DoubleProperty getYProperty() {
+    public synchronized DoubleProperty getYProperty() {
         return yProperty();
     }
 
     @Override
-    public void setYProperty(double y) {
+    public synchronized void setYProperty(double y) {
         setY(y - 50);
     }
 
     @Override
-    public void setShapeStroke(Paint paint) {
+    public synchronized void setShapeStroke(Paint paint) {
         setStroke(paint);
         setStrokeWidth(3);
     }
 
     @Override
-    public Text getText() {
-        return text;
+    public synchronized Text getText() {
+        return null;
     }
 
 }

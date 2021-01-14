@@ -3,6 +3,7 @@ package model;
 import GUI.MachineGUI;
 import javafx.scene.paint.Color;
 
+import java.util.HashMap;
 import java.util.concurrent.LinkedBlockingQueue;
 
 public class Machine implements Runnable{
@@ -17,6 +18,7 @@ public class Machine implements Runnable{
     private long simStart;
     public MachineGUI machineGUI;
     private java.util.Queue<Memento> log;
+    boolean restart = false;
 
     /**for GUI based simultaion*/
     public Machine(Queue[] in, Queue out, long time, Color colour, MachineGUI machineGUI) {
@@ -48,16 +50,21 @@ public class Machine implements Runnable{
 
     /**processes current product and forwards it to next queue*/
     private void processProduct(){
+        System.out.println("processing product..");
         report();
         try{
             Thread.sleep(time);
         }catch (InterruptedException e){
+            if(this.stop == true)
+                return;
             e.printStackTrace();
         }
+        System.out.println("processProduct::enqueuing ..");
         out.enqueue(currentProduct);
         flicker();
         currentProduct = null;
         report();
+        System.out.println("preProcessing ended ..");
     }
 
     /**Flickers and stores it in log*/
@@ -72,8 +79,11 @@ public class Machine implements Runnable{
 
     /**reports event to GUI and stores it in log*/
     private void report(){
+        System.out.println("reporting ..");
         Color nextState = getColour();
+        System.out.println("report::filling color .. " + nextState.toString() );
         machineGUI.setFill(nextState);
+        System.out.println("report::color filled ..");
         log.offer(new Memento(nextState,System.currentTimeMillis() - simStart));
     }
 
@@ -89,6 +99,7 @@ public class Machine implements Runnable{
             System.out.println(q.printLog("q_in"));
         }
         try {
+
             for(int i = 0; i < logSize; i++){
                 Memento memento = log.remove(); //event: processing next product
                 tempTime = memento.timestamp - currentReplayStamp;
@@ -98,7 +109,9 @@ public class Machine implements Runnable{
                 log.offer(memento); //if we need to replay again
 
                 for(Queue q : in){ //refresh input queues
-                    q.replay();
+                    if(q.queueGUI.getText().toString().equals("0") == false) {
+                        q.replay();
+                    }
                 }
                 machineGUI.setFill(memento.nextState);//change colour
 
@@ -122,6 +135,7 @@ public class Machine implements Runnable{
         stop = false;
         replay = false;
         simStart = System.currentTimeMillis();
+        restart = false;
     }
 
     /**
@@ -143,6 +157,7 @@ public class Machine implements Runnable{
     /**
      * registers this machine to all the input queues it is connected to*/
     public synchronized void register(){
+        System.out.println("Machine::registering ..");
         for(Queue q : in){
             if(!q.registerMachine(this)){ //if this queue got a product in the meantime
                 putProduct(q.dequeue()); //accept it
@@ -153,7 +168,12 @@ public class Machine implements Runnable{
             try {
                 this.wait();
             } catch (InterruptedException e) {
-                return;
+                if(restart)
+                    return;
+                if(!stop && !replay) //the interrupt was not caused by stop method nor startReplay
+                    System.out.println("thread wakeup");
+                else
+                    return;
             }
         }
         processProduct();
@@ -212,6 +232,9 @@ public class Machine implements Runnable{
     /**restarts the simulation from scratch with the same machines and queues*/
     public void restart(){
         init();
+        restart = true;
+        machineThread.interrupt();
+
     }
 
     /**runs a single simulation and can replay it*/
@@ -232,6 +255,7 @@ public class Machine implements Runnable{
             }else{ //no input queue had a product
                 register();
             }
+            System.out.println("woke up\n");
         }
 
         while(!stop){
