@@ -75,13 +75,13 @@ public class NavBar extends HBox {
         CustomButton rePlayButton = new CustomButton("replay.png");
         rePlayButton.setOnMouseClicked(e -> {
 
-            Graph graph = simulationCanvas.replaySimulation();
-            playGraph(graph);
-            /*System.out.println("Replay Clicked");
+            //Graph graph = simulationCanvas.replaySimulation();
+            //playGraph(graph);
+            System.out.println("Replay Clicked");
             for(Machine machine: machines){
                 machine.stop();
                 machine.startReplay();
-            }*/
+            }
         });
 
         /*  Composing the HBox   */

@@ -14,7 +14,7 @@ public class Queue{
     private final java.util.Queue<Product> internal = new LinkedBlockingQueue<>();
     private final java.util.Queue<Machine> waitingList;
     private final java.util.Queue<String> log = new LinkedBlockingQueue<>();
-    private int originalProducts = 0;
+    public int originalProducts = 0;
     public QueueGUI queueGUI;
 
     public Queue(){
